@@ -10,15 +10,14 @@
     <version>1.0.0</version>
 
     <modules>
-        <module>thor-biz</module>
         <module>thor-conf</module>
         <module>thor-runner</module>
         <module>thor-common</module>
         <module>thor-server</module>
-        <module>thor-bizgen</module>
+        <module>thor-generate</module>
         <module>thor-facade</module>
-        <module>thor-framework-api</module>
-        <module>thor-framework</module>
+        <module>thor-api</module>
+        <module>thor-core</module>
     </modules>
 
     <properties>
