@@ -5,7 +5,6 @@
 
 package com.haoyayi.thor.server.heartbeat;
 
-import com.haoyayi.thor.server.controller.AbstractController;
 import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.GET;
@@ -16,7 +15,7 @@ import javax.ws.rs.Path;
  */
 @Controller
 @Path("/heartbeat/")
-public class HeartBeatController extends AbstractController {
+public class HeartBeatController {
 
     @GET
     public String heartBeat() {

@@ -22,10 +22,11 @@ public enum ConditionFunc {
         @Override
         public String getPairString(Object field, Object... param) {
             if (param[0] instanceof String) {
-                return field + " like \"%" + param[0] +"%\"";
+                return field + " like \"%" + param[0] + "%\"";
             }
             return field + " BETWEEN " + param[0] + " AND " + param[1];
-        }    },
+        }
+    },
 
     /**
      * BETWEEN AND
@@ -52,7 +53,7 @@ public enum ConditionFunc {
             return field + " = " + param[0];
         }
     },
-    
+
     /**
      * =
      */
@@ -62,9 +63,9 @@ public enum ConditionFunc {
             return field + " IS NULL";
         }
     },
-    
+
     ISNOTNULL {
-    	@Override
+        @Override
         public String getPairString(Object field, Object... param) {
             return field + " IS NOT NULL";
         }
@@ -178,9 +179,9 @@ public enum ConditionFunc {
                 if (object != null) {
                     if (object instanceof Collection) {
                         instr = new ArrayList<String>((Collection) object);
-                    } else if (object instanceof String){
-                        instr.add("'"+object.toString()+"'");
-                    }else {
+                    } else if (object instanceof String) {
+                        instr.add("'" + object.toString() + "'");
+                    } else {
                         instr.add(object.toString());
                     }
                 }
@@ -190,14 +191,14 @@ public enum ConditionFunc {
             return stringBuilder.toString();
         }
     },
-    
+
     /**
      * 作为子model查询的IN条件，但查询结果不过滤父model
      */
     SUBIN {
-    	public String getPairString(Object field, Object... param) {
-    		return IN.getPairString(field, param);
-    	}
+        public String getPairString(Object field, Object... param) {
+            return IN.getPairString(field, param);
+        }
     };
 
     public String getPairString(Object field, Object... param) {

@@ -39,10 +39,6 @@ import com.haoyayi.thor.utils.NetworkUtils;
  */
 public class RpcContextInteceptor {
 
-    public static final String COOKIE_CHANNEL = "channel";
-    public static final String COOKIE_SOURCE = "source";
-    public static final String COOKIE_SECTION = "section";
-
     /**
      * Process LOGGER
      */
@@ -195,45 +191,6 @@ public class RpcContextInteceptor {
         return response;
     }
 
-    /**
-     * DUMP LOG
-     * <p/>
-     * service api logid ticketid sourceip from_module channel source current_ip current_module params status starttime endtime cost
-     * <p/>
-     *
-     * @param clazz
-     * @param methodName
-     * @param params
-     * @param costTime
-     * @param startTime
-     * @param status     void
-     * @author sunkai
-     */
-    private void dumpInvokeLog(String clazz, String methodName,
-                               String params, CostTime costTime, Date startTime, int status) {
-        try {
-            LOGGER.info("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
-                    clazz,
-                    methodName,
-                    InvokeContextHolder.getInstance().getBizContextAsString(InvokeContextDict.LOGID),
-                    InvokeContextHolder.getInstance().getBizContextAsString(InvokeContextDict.TICKETID),
-                    InvokeContextHolder.getInstance().getBizContextAsString(InvokeContextDict.SOURCEIP),
-                    InvokeContextHolder.getInstance().getBizContextAsString(InvokeContextDict.FROMMODULE),
-                    InvokeContextHolder.getInstance().getBizContextAsString(InvokeContextDict.CHANNEL),
-                    InvokeContextHolder.getInstance().getBizContextAsString(InvokeContextDict.SOURCE),
-                    NetworkUtils.getLocalAddress(),
-                    InvokeContextHolder.CURRENT_MODULDE,
-                    params,
-                    status,
-                    FORMAT.format(startTime),
-                    FORMAT.format(new Date()),
-                    costTime.cost()
-            );
-        } catch (Exception e) {
 
-        } finally {
-          clear();
-        }
-    }
 
 }

@@ -22,27 +22,11 @@
         </dependency>
         <dependency>
             <groupId>com.haoyayi.thor</groupId>
-            <artifactId>thor-bizgen</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.haoyayi.thor</groupId>
-            <artifactId>thor-biz</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.haoyayi.thor</groupId>
-            <artifactId>thor-changehistory</artifactId>
+            <artifactId>thor-generate</artifactId>
         </dependency>
         <dependency>
             <groupId>com.haoyayi.thor</groupId>
             <artifactId>thor-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.haoyayi.thor</groupId>
-            <artifactId>thor-dal</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.haoyayi.thor</groupId>
-            <artifactId>thor-sal</artifactId>
         </dependency>
         <dependency>
             <groupId>com.haoyayi.thor</groupId>

@@ -158,59 +158,15 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.stuxuhai</groupId>
-			<artifactId>jpinyin</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.haoyayi.driver</groupId>
-			<artifactId>driver-sms</artifactId>
-		</dependency>
-        <dependency>
-        	<groupId>com.haoyayi.dbrouter</groupId>
-        	<artifactId>dbrouter-core</artifactId>
-        </dependency>
-<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>javax.jms</groupId>
 			<artifactId>jms-api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>ons</groupId>
-			<artifactId>ons-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ons</groupId>
-			<artifactId>ons-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ons</groupId>
-			<artifactId>ons-jms</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>rocketmq</groupId>
-			<artifactId>rocketmq-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>rocketmq</groupId>
-			<artifactId>rocketmq-common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>rocketmq</groupId>
-			<artifactId>rocketmq-remoting</artifactId>
-		</dependency>
+
 		<dependency>
             <groupId>netty</groupId>
             <artifactId>netty-all</artifactId>

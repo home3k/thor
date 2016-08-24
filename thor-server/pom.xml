@@ -30,7 +30,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -126,16 +125,6 @@
 
         <dependency>
             <groupId>com.haoyayi.thor</groupId>
-            <artifactId>thor-biz</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.haoyayi.thor</groupId>
-            <artifactId>thor-changehistory</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.haoyayi.thor</groupId>
             <artifactId>thor-facade</artifactId>
         </dependency>
 
@@ -148,14 +137,7 @@
             <groupId>com.haoyayi.thor</groupId>
             <artifactId>thor-common</artifactId>
         </dependency>
-		 <dependency>
-         	<groupId>com.haoyayi.driver</groupId>
-         	<artifactId>driver-disconf</artifactId>
-         </dependency>
-         <dependency>
-         	<groupId>org.apache.zookeeper</groupId>
-         	<artifactId>zookeeper</artifactId>
-         </dependency>
+
     </dependencies>
 
 </project>

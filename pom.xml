@@ -7,7 +7,7 @@
     <groupId>com.haoyayi.thor</groupId>
     <artifactId>thor-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0-SNAPSHOT</version>
 
     <modules>
         <module>thor-conf</module>
@@ -541,42 +541,6 @@
                 <artifactId>jpinyin</artifactId>
                 <version>${jpinyin.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.haoyayi.driver</groupId>
-                <artifactId>driver-sms</artifactId>
-                <version>${driver.sms.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.haoyayi.driver</groupId>
-                <artifactId>driver-disconf</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-redis</artifactId>
-                <version>1.0.2.RELEASE</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cloopen.rest.sdk</groupId>
-                <artifactId>CCPrestSDK</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.haoyayi.dbrouter</groupId>
-                <artifactId>dbrouter-core</artifactId>
-                <version>${dbrouter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.haoyayi.driver</groupId>
-                <artifactId>driver-emoji</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.aliyun.openservices</groupId>
-                <artifactId>ons-client</artifactId>
-                <version>1.1.8</version>
-            </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
@@ -596,41 +560,6 @@
                 <groupId>ons</groupId>
                 <artifactId>ons-api</artifactId>
                 <version>1.1.8</version>
-            </dependency>
-            <dependency>
-                <groupId>ons</groupId>
-                <artifactId>ons-client</artifactId>
-                <version>1.1.8</version>
-            </dependency>
-            <dependency>
-                <groupId>ons</groupId>
-                <artifactId>ons-jms</artifactId>
-                <version>1.1.8</version>
-            </dependency>
-            <dependency>
-                <groupId>rocketmq</groupId>
-                <artifactId>rocketmq-client</artifactId>
-                <version>3.2.5</version>
-            </dependency>
-            <dependency>
-                <groupId>rocketmq</groupId>
-                <artifactId>rocketmq-common</artifactId>
-                <version>3.2.5</version>
-            </dependency>
-            <dependency>
-                <groupId>rocketmq</groupId>
-                <artifactId>rocketmq-remoting</artifactId>
-                <version>3.2.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.zookeeper</groupId>
-                <artifactId>zookeeper</artifactId>
-                <version>${zookeeper.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.huawei.push</groupId>
-                <artifactId>huawei-push</artifactId>
-                <version>1.0.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

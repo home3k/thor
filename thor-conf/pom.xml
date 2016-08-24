@@ -12,46 +12,6 @@
     <artifactId>thor-conf</artifactId>
     
     <dependencies>
-    	<dependency>
-         	<groupId>com.haoyayi.driver</groupId>
-         	<artifactId>driver-disconf</artifactId>
-         </dependency>
     </dependencies>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources/${conf-dir}</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources/base</directory>
-            </resource>
-        </resources>
-    </build>
-
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <conf-dir>dev</conf-dir>
-            </properties>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <conf-dir>test</conf-dir>
-            </properties>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <conf-dir>prod</conf-dir>
-            </properties>
-        </profile>
-    </profiles>
-
 
 </project>
