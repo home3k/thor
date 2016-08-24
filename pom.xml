@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.haoyayi.thor</groupId>
+    <artifactId>thor-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+
+    <modules>
+        <module>thor-biz</module>
+        <module>thor-conf</module>
+        <module>thor-runner</module>
+        <module>thor-common</module>
+        <module>thor-server</module>
+        <module>thor-bizgen</module>
+        <module>thor-facade</module>
+        <module>thor-framework-api</module>
+        <module>thor-framework</module>
+    </modules>
+
+    <properties>
+        <thor.version>1.0-SNAPSHOT</thor.version>
+        <java.version>1.6</java.version>
+        <spring.version>3.2.2.RELEASE</spring.version>
+        <resteasy.version>3.0.11.Final</resteasy.version>
+        <org.aspectj-version>1.6.10</org.aspectj-version>
+        <slf4j.version>1.7.7</slf4j.version>
+        <log4j.version>1.2.15</log4j.version>
+        <log4j.core.version>2.2</log4j.core.version>
+        <log4j.slf4j.version>2.2</log4j.slf4j.version>
+        <netty.version>3.6.5.Final</netty.version>
+        <h2.version>1.3.173</h2.version>
+        <commons.lang.version>2.5</commons.lang.version>
+        <dom4j.verion>1.6.1</dom4j.verion>
+        <commons.lang3.version>3.3.2</commons.lang3.version>
+        <commons.beanutils.version>1.8.0</commons.beanutils.version>
+        <aspectj.version>1.6.8</aspectj.version>
+        <c3p0.version>0.9.1.1</c3p0.version>
+        <mysql.connector.version>5.1.34</mysql.connector.version>
+        <fastjson.version>1.2.3</fastjson.version>
+        <freemarker.version>2.3.19</freemarker.version>
+        <aopalliance.version>1.0</aopalliance.version>
+        <!-- 注意jackson 2.3* 跟resteasy在java7下不兼容!  wtf-->
+        <jackson.resteasy.version>2.2.1</jackson.resteasy.version>
+        <jackson.version>2.4.5</jackson.version>
+        <qiniu.version>7.0.3</qiniu.version>
+        <jpinyin.version>1.0</jpinyin.version>
+        <driver.sms.version>1.0.4-SNAPSHOT</driver.sms.version>
+        <disconf.version>1.0.0-SNAPSHOT</disconf.version>
+        <dbrouter.version>1.0.6</dbrouter.version>
+        <guava.version>15.0</guava.version>
+        <json-simple.version>1.1.1</json-simple.version>
+        <mipush-server.version>2.2.16</mipush-server.version>
+        <zookeeper.version>3.4.8</zookeeper.version>
+    </properties>
+
+    <dependencyManagement>
+
+        <dependencies>
+
+            <!-- AOP Alliance -->
+            <dependency>
+                <groupId>aopalliance</groupId>
+                <artifactId>aopalliance</artifactId>
+                <version>${aopalliance.version}</version>
+            </dependency>
+
+            <!-- Freemarker -->
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
+            </dependency>
+
+            <!-- Self Module -->
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-api</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-facade</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-conf</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-dal</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-common</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-changehistory</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-biz</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-bizgen</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-runner</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-sal</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-server</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-framework</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-framework-api</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j.slf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-api</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-api</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.jms</groupId>
+                        <artifactId>jms</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jdmk</groupId>
+                        <artifactId>jmxtools</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jmx</groupId>
+                        <artifactId>jmxri</artifactId>
+                    </exclusion>
+                </exclusions>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>1.4</version>
+            </dependency>
+
+            <!-- Netty -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>4.0.25.Final</version>
+            </dependency>
+
+            <!-- Protostuff -->
+            <dependency>
+                <groupId>com.dyuproject.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>1.0.8</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.dyuproject.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>1.0.8</version>
+            </dependency>
+
+            <!-- RESTeasy -->
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jackson2-provider</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jaxb-provider</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jaxrs</artifactId>
+                <version>${resteasy.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-simple</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-spring</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-netty</artifactId>
+                <version>${resteasy.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>netty</artifactId>
+                        <groupId>io.netty</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.json.simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${json-simple.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.mipush</groupId>
+                <artifactId>mipush-server</artifactId>
+                <version>${mipush-server.version}</version>
+            </dependency>
+
+            <!-- Spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jaxen</groupId>
+                <artifactId>jaxen</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+
+            <!-- JSON  -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-base</artifactId>
+                <version>${jackson.resteasy.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
+                <version>${jackson.resteasy.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-base</artifactId>
+                <version>${jackson.resteasy.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- Servlet -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.5</version>
+            </dependency>
+
+            <!-- Test -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.7</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.5</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Common Utils -->
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons.lang.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4j.verion}</version>
+
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons.beanutils.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>2.6.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>1.6.11</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>2.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>1.5.4</version>
+            </dependency>
+
+            <!-- H2 -->
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+            </dependency>
+
+            <!-- C3P0 -->
+            <dependency>
+                <groupId>c3p0</groupId>
+                <artifactId>c3p0</artifactId>
+                <version>${c3p0.version}</version>
+            </dependency>
+
+            <!-- MySQL Connector -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connector.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-client</artifactId>
+                <version>2.15</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-json-jackson</artifactId>
+                <version>2.15</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-multipart</artifactId>
+                <version>2.15</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.3.3</version>
+            </dependency>
+            <dependency>
+				<groupId>commons-httpclient</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>3.1</version> 
+			</dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpmime</artifactId>
+                <version>4.3.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.jpush.api</groupId>
+                <artifactId>jpush-client</artifactId>
+                <version>3.2.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity</artifactId>
+                <version>1.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.4.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>18.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>3.2.0</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.kcthota</groupId>
+                <artifactId>emoji4j</artifactId>
+                <version>3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>${qiniu.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.stuxuhai</groupId>
+                <artifactId>jpinyin</artifactId>
+                <version>${jpinyin.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.haoyayi.driver</groupId>
+                <artifactId>driver-sms</artifactId>
+                <version>${driver.sms.version}</version>
+            </dependency>
+            <dependency>
+            	<groupId>com.haoyayi.driver</groupId>
+            	<artifactId>driver-disconf</artifactId>
+            	<version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>  
+		        <groupId>org.springframework.data</groupId>  
+		        <artifactId>spring-data-redis</artifactId>  
+		        <version>1.0.2.RELEASE</version>  
+		    </dependency>  
+		    <dependency>
+		    	<groupId>com.cloopen.rest.sdk</groupId>
+		    	<artifactId>CCPrestSDK</artifactId>
+		    	<version>1.0.0</version>
+		    </dependency>
+            <dependency>
+                <groupId>com.haoyayi.dbrouter</groupId>
+                <artifactId>dbrouter-core</artifactId>
+                <version>${dbrouter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.haoyayi.driver</groupId>
+                <artifactId>driver-emoji</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+			    <groupId>com.aliyun.openservices</groupId>
+			   	<artifactId>ons-client</artifactId>
+			   	<version>1.1.8</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>1.2.3</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.jms</groupId>
+				<artifactId>jms-api</artifactId>
+				<version>1.1-rev-1</version>
+			</dependency>
+			<dependency>
+				<groupId>ons</groupId>
+				<artifactId>ons-api</artifactId>
+				<version>1.1.8</version>
+			</dependency>
+			<dependency>
+				<groupId>ons</groupId>
+				<artifactId>ons-client</artifactId>
+				<version>1.1.8</version>
+			</dependency>
+			<dependency>
+				<groupId>ons</groupId>
+				<artifactId>ons-jms</artifactId>
+				<version>1.1.8</version>
+			</dependency>
+			<dependency>
+				<groupId>rocketmq</groupId>
+				<artifactId>rocketmq-client</artifactId>
+				<version>3.2.5</version>
+			</dependency>
+			<dependency>
+				<groupId>rocketmq</groupId>
+				<artifactId>rocketmq-common</artifactId>
+				<version>3.2.5</version>
+			</dependency>
+			<dependency>
+				<groupId>rocketmq</groupId>
+				<artifactId>rocketmq-remoting</artifactId>
+				<version>3.2.5</version>
+			</dependency>
+			<dependency>
+	         	<groupId>org.apache.zookeeper</groupId>
+	         	<artifactId>zookeeper</artifactId>
+	         	<version>${zookeeper.version}</version>
+	         </dependency>
+	         <dependency>
+	         	<groupId>com.huawei.push</groupId>
+	         	<artifactId>huawei-push</artifactId>
+	         	<version>1.0.0</version>
+	         </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+            </plugin>
+
+            <!-- source code is utf8 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>utf-8</encoding>
+                </configuration>
+            </plugin>
+            <!-- resource is utf8 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>utf-8</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <show>private</show>
+                    <aggregate>true</aggregate>
+                    <charset>UTF-8</charset>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Releases Repository</name>
+            <url>http://maven.51haoyayi.com:18081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus Snapshots Repository</name>
+            <url>http://maven.51haoyayi.com:18081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>central</id>-->
+            <!--<url>http://mirrors.ibiblio.org/maven2/</url>-->
+        <!--</repository>-->
+        <!--<repository>-->
+            <!--<id>snapshots</id>-->
+            <!--<url>http://mirrors.ibiblio.org/maven2/</url>-->
+        <!--</repository>-->
+    <!--</repositories>-->
+
+
+</project>

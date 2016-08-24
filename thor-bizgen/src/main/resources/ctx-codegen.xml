@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2015 51haoyayi.com Inc Limited.
+  ~ All rights reserved.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <context:component-scan base-package="com.haoyayi.thor.bizgen.api"/>
+    <context:component-scan base-package="com.haoyayi.thor.bizgen.biz"/>
+    <context:component-scan base-package="com.haoyayi.thor.bizgen.controller"/>
+    <context:component-scan base-package="com.haoyayi.thor.bizgen.dal"/>
+    <context:component-scan base-package="com.haoyayi.thor.bizgen.dml"/>
+    <context:component-scan base-package="com.haoyayi.thor.bizgen.replace"/>
+    <context:annotation-config/>
+
+    <bean id="codeGenFreeMarkerConfigurer"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="classpath:template/"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">1800</prop>
+                <prop key="default_encoding">UTF-8</prop>
+                <prop key="locale">zh_CN</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <bean id="codegenProcessorContext" class="com.haoyayi.thor.bizgen.meta.CodegenProcessorContext">
+        <property name="processors">
+            <map>
+                <entry key="api">
+                   <value>apiCodeGenerator</value>
+                </entry>
+                <entry key="biz">
+                   <value>bizCodeGenerator</value>
+                </entry>
+                <entry key="controller">
+                   <value>controllerCodeGenerator</value>
+                </entry>
+                <entry key="dal">
+                   <value>dalMetaGenerator</value>
+                </entry>
+                  <entry key="replace">
+                   <value>replaceCodegenerator</value>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="commandContext" class="com.haoyayi.thor.bizgen.command.CommandContext">
+
+        <property name="procs">
+            <map>
+                <entry key="api">
+                    <set>
+                        <value>api</value>
+                        <value>dto</value>
+                    </set>
+                </entry>
+                <entry key="biz">
+                    <set>
+                        <value>apiImpl</value>
+                        <value>biz</value>
+                        <value>factory</value>
+                        <value>repository</value>
+                        <value>validator</value>
+                        <value>service</value>
+                        <value>convertBiz</value>
+                        <value>queryBiz</value>
+                    </set>
+                </entry>
+                <entry key="controller">
+                    <set>
+                        <value>api</value>
+                    </set>
+                </entry>
+                <entry key="dal">
+                    <set>
+                        <value>dao</value>
+                        <value>daoImpl</value>
+                        <value>columnRowMapper</value>
+                        <value>rowMapper</value>
+                        <value>column</value>
+                        <value>bo</value>
+                    </set>
+                </entry>
+                <entry key="replace">
+                    <set>
+                        <value>replace</value>
+                    </set>
+                </entry>
+            </map>
+        </property>
+        
+        <property name="addField">
+            <map>
+                <entry key="api">
+                    <set>
+                        <value>api</value>
+                        <value>dto</value>
+                    </set>
+                </entry>
+                <entry key="dal">
+                    <set>
+                        <value>columnRowMapper</value>
+                        <value>rowMapper</value>
+                        <value>column</value>
+                        <value>bo</value>
+                    </set>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>

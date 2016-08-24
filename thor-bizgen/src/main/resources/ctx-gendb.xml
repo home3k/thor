@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2015 51haoyayi.com Inc Limited.
+  ~ All rights reserved.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/osgi
+http://www.springframework.org/schema/osgi/spring-osgi.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!--
+		========================= GENERAL DEFINITIONS
+		=========================
+	-->
+	<context:annotation-config />
+	<!--
+		Configurer that replaces ${...} placeholders with values from a
+		properties file
+	-->
+	<!--
+		(in this case, JDBC-related settings for the dataSource definition
+		below)
+	-->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc-mysql-gen.properties</value>
+			</list>
+		</property>
+		<property name="placeholderPrefix">
+			<value>#[</value>
+		</property>
+		<property name="placeholderSuffix">
+			<value>]</value>
+		</property>
+	</bean>
+
+	<!-- wmkq test 写库  -->
+	<bean id="dbthor_write" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+
+        <property name="driverClass">
+            <value>#[jdbc.driverClassName]</value>
+        </property>
+
+		<property name="jdbcUrl">
+			<value>#[dbwmkq_write.url]</value>
+		</property>
+		<property name="user">
+			<value>#[dbwmkq_write.username]</value>
+		</property>
+		<property name="password">
+			<value>#[dbwmkq_write.password]</value>
+		</property>
+		<property name="maxPoolSize">
+			<value>#[dbwmkq_write.maxPoolSize]</value>
+		</property>
+		<property name="minPoolSize">
+			<value>#[dbwmkq_write.minPoolSize]</value>
+		</property>
+		<property name="initialPoolSize">
+			<value>#[dbwmkq_write.initialPoolSize]</value>
+		</property>
+		<property name="idleConnectionTestPeriod">
+			<value>#[dbwmkq_write.idleConnectionTestPeriod]</value>
+		</property>
+		<property name="maxIdleTime">
+			<value>#[dbwmkq_write.maxIdleTime]</value>
+		</property>
+	</bean>
+
+    <!--  jdbcTemplate  -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dbthor_write"/>
+    </bean>
+
+
+</beans>

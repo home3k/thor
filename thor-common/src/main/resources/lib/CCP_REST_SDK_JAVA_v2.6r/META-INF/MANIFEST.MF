@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Created-By: Fat Jar Eclipse Plug-In
+Main-Class: com.cloopen.rest.demo.Test
+
+
+
+
+
+
+Name: org.apache.log4j
+DynamicImport-Package: *
+Implementation-Vendor: "Apache Software Foundation"
+Implementation-Title: log4j
+Implementation-Version: 1.2.17
+
+
+

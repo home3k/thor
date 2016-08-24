@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>thor-parent</artifactId>
+        <groupId>com.haoyayi.thor</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>thor-runner</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.haoyayi.thor</groupId>
+            <artifactId>thor-conf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.haoyayi.thor</groupId>
+            <artifactId>thor-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.haoyayi.thor</groupId>
+            <artifactId>thor-bizgen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.haoyayi.thor</groupId>
+            <artifactId>thor-biz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.haoyayi.thor</groupId>
+            <artifactId>thor-changehistory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.haoyayi.thor</groupId>
+            <artifactId>thor-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.haoyayi.thor</groupId>
+            <artifactId>thor-dal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.haoyayi.thor</groupId>
+            <artifactId>thor-sal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.haoyayi.thor</groupId>
+            <artifactId>thor-server</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>thor</finalName>
+        <plugins>
+            <!-- unpack config and scripts -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <!--  conf -->
+                                <artifactItem>
+                                    <groupId>com.haoyayi.thor</groupId>
+                                    <artifactId>thor-conf</artifactId>
+                                    <outputDirectory>target/extra-conf</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <decriptor>src/main/assembly/assembly.xml</decriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

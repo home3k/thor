@@ -1,0 +1,58 @@
+<assembly
+        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id></id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <fileSets>
+        <!-- app bin -->
+        <fileSet>
+            <directory>src/main/assembly/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <!-- xml extra conf -->
+        <fileSet>
+            <directory>target/extra-conf</directory>
+            <outputDirectory>conf</outputDirectory>
+            <includes>
+                <include>*/*</include>
+                <include>*/*/*</include>
+                <include>*</include>
+                <include>com/haoyayi/thor/*/*/*</include>
+                <include>com/haoyayi/thor/*</include>
+                <include>com/haoyayi/thor/*/*</include>
+            </includes>
+            <excludes>
+                <exclude>oneapm*</exclude>
+            </excludes>
+            <fileMode>0644</fileMode>
+        </fileSet>
+        <!-- apm folder -->
+        <fileSet>
+            <directory>src/main/assembly/oneapm</directory>
+            <outputDirectory>oneapm</outputDirectory>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>target/extra-conf</directory>
+            <outputDirectory>oneapm</outputDirectory>
+            <includes>
+                <include>oneapm*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <excludes>
+                <exclude>com.haoyayi.thor:thor-conf</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
+
+</assembly>

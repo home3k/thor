@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2015 51haoyayi.com Inc Limited.
+  ~ All rights reserved.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/osgi
+http://www.springframework.org/schema/osgi/spring-osgi.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!--
+		========================= GENERAL DEFINITIONS
+		=========================
+	-->
+	<bean id="dbDesc" class="com.haoyayi.thor.bizgen.dal.DBDesc">
+		<property name="typemap">
+			<map>
+				<!-- TINYINT  -->
+				<entry key="-6" value="Integer" />
+				<!-- DATE -->
+				<entry key="91" value="Date" />
+				<!-- DECIMAL -->
+				<entry key="3" value="Double" />
+				<entry key="8" value="Double" />
+				<!-- SMALLINT -->
+				<entry key="5" value="Integer" />
+				<!-- BIGINT -->
+				<entry key="-5" value="Long" />
+				<!-- INTEGER -->
+				<entry key="4" value="Long" />
+				<!-- VARCHAR -->
+				<entry key="12" value="String" />
+				<!-- CHAR -->
+				<entry key="1" value="String" />
+				<!-- TIMESTAMP -->
+				<entry key="93" value="Date" />
+                <!-- TIME -->
+				<entry key="92" value="Date" />
+			</map>
+		</property>
+		<property name="tables">
+			<set>
+				<value>user_im</value>
+				<value>im_message</value>
+				<value>book_channel</value>
+				<value>didi_order</value>
+				<value>didi_doctor</value>
+				<value>dentist_score_feed</value>
+			</set>
+		</property>
+	</bean>
+
+</beans>
