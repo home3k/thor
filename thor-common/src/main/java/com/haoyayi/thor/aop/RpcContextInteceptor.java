@@ -66,80 +66,10 @@ public class RpcContextInteceptor {
 
         Object result = null;
         Object[] params = pjp.getArgs();
-        String paramStr = mapper.writeValueAsString(params).replaceAll(" ","_");
+        String paramStr = mapper.writeValueAsString(params).replaceAll(" ", "_");
 
         // Get http headers
         HttpHeaders headers = (HttpHeaders) params[0];
-
-        if (! (params[1] instanceof AbstractWrapper)) {
-	        	String methodName = pjp.getSignature().getName();
-	        	LOGGER.info("methodName:" + methodName + ", params:" + params[1]);
-	        	return pjp.proceed(params);
-        }
-        AbstractWrapper wrapper = (AbstractWrapper) params[1];
-
-        String openid = null, sectionid = null;
-        if (wrapper != null) {
-            if (wrapper.getExtra() != null) {
-                openid = (String)wrapper.getExtra().get(RequestExtraDict.openid);
-                sectionid = (String)wrapper.getExtra().get(RequestExtraDict.sectionId);
-                InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.OPTID, wrapper.getOptid());
-                InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.OPENID, openid);
-                InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.SECTIONID, sectionid);
-                InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.LOGINROLE, wrapper.getExtra().get(RequestExtraDict.loginRole));
-                InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.LOGINNAME, wrapper.getExtra().get(RequestExtraDict.loginName));
-                InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.LOGINDENTISTID, wrapper.getExtra().get(RequestExtraDict.loginDentistId));
-                InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.MERGERULE, wrapper.getExtra().get(RequestExtraDict.mergeRule));
-                InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.UNIONID, wrapper.getExtra().get(RequestExtraDict.unionId));
-            }
-            if (StringUtils.isNotEmpty(wrapper.getVersion())) {
-            	InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.VERSION, wrapper.getVersion());
-            }
-        }
-
-        MultivaluedMap<String, String> headerMap = headers.getRequestHeaders();
-
-
-        Map<String, Cookie> cookies = headers.getCookies();
-
-        if (cookies.containsKey(COOKIE_CHANNEL)) {
-            InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.CHANNEL, cookies.get(COOKIE_CHANNEL).getValue());
-        } else {
-            InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.CHANNEL, headerMap.getFirst(InvokeContextDict.CHANNEL.getValue()));
-        }
-
-        if (cookies.containsKey(COOKIE_SOURCE)) {
-            InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.SOURCE, cookies.get(COOKIE_SOURCE).getValue());
-        } else {
-            InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.SOURCE, headerMap.getFirst(InvokeContextDict.SOURCE.getValue()));
-        }
-
-        InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.TICKETID, headerMap.getFirst(InvokeContextDict.TICKETID.getValue()));
-        InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.LOGID, headerMap.getFirst(InvokeContextDict.LOGID.getValue()));
-        InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.FROMMODULE, headerMap.getFirst(InvokeContextDict.FROMMODULE.getValue()));
-        if (StringUtils.isNotEmpty(headerMap.getFirst(InvokeContextDict.SOURCEIP.getValue()))) {
-        	InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.SOURCEIP, headerMap.getFirst(InvokeContextDict.SOURCEIP.getValue()));
-        } else {
-        	InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.SOURCEIP, "0.0.0.1");
-        }
-
-        if (StringUtils.isNotBlank(sectionid) && !sectionid.equals("null")) {
-            InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.CHANNEL, "Section");
-            InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.SOURCE, sectionid);
-        }
-
-        if (StringUtils.isNotBlank(openid) && !openid.equals("null")) {
-            InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.CHANNEL, "Wechat");
-            InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.SOURCE, "-");
-        }
-        
-        // 如果header里有， 按照header的设置
-        if(StringUtils.isNotBlank(headerMap.getFirst(InvokeContextDict.CHANNEL.getValue()))) {
-        		InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.CHANNEL, headerMap.getFirst(InvokeContextDict.CHANNEL.getValue()));
-        }
-        if(StringUtils.isNotBlank(headerMap.getFirst(InvokeContextDict.SOURCE.getValue()))) {
-        	  	InvokeContextHolder.getInstance().setBizContext(InvokeContextDict.SOURCE, headerMap.getFirst(InvokeContextDict.SOURCE.getValue()));
-        }
 
         String clazz = pjp.getTarget().getClass().getSimpleName();
 
@@ -163,8 +93,7 @@ public class RpcContextInteceptor {
                 throw th;
             }
         } finally {
-            //dump log.
-            dumpInvokeLog(clazz, methodName, paramStr, costtime, startTime, status);
+            //dump log. TODO
         }
         return result;
 
@@ -173,24 +102,15 @@ public class RpcContextInteceptor {
     private Object wrapperException(Throwable t, ProceedingJoinPoint pjp) throws Exception {
         Method method = pjp.getSignature().getDeclaringType().getMethod(
                 pjp.getSignature().getName(),
-                new Class[] { HttpHeaders.class, pjp.getArgs()[1].getClass() });
+                new Class[]{HttpHeaders.class, pjp.getArgs()[1].getClass()});
         Type returnType = method.getReturnType();
         Object response = ((Class) returnType).newInstance();
-        Method setStatus=response.getClass().getMethod("setStatus", Integer.class);
+        Method setStatus = response.getClass().getMethod("setStatus", Integer.class);
 
         setStatus.invoke(response, CommonResponse.API_STATUS_FAILED);
 
-        if (t instanceof AuthException) {
-            com.haoyayi.thor.api.Error error = new Error();
-            error.setErrorCode(ErrorCode.ERROR_AUTH_COMMON_ERROR);
-            error.setErrorMessage("Auth Error!");
-            Method setError=response.getClass().getMethod("setError", Error.class);
-            setError.invoke(response, error);
-
-        }
         return response;
     }
-
 
 
 }
