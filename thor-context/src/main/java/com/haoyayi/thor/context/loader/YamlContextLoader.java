@@ -3,17 +3,11 @@
  * All rights reserved.
  */
 
-package com.haoyayi.thor.bizgen.load;
+package com.haoyayi.thor.context.loader;
 
-import java.util.Map;
 
-import com.google.common.collect.Maps;
-import com.haoyayi.thor.bizgen.AbstractCodegenerator;
-import com.haoyayi.thor.bizgen.CamelUtils;
-import com.haoyayi.thor.bizgen.GenType;
-import com.haoyayi.thor.bizgen.context.CodegenContextHolder;
-import com.haoyayi.thor.bizgen.meta.ModelContext;
-
+import com.haoyayi.thor.context.meta.ModelContext;
+import com.haoyayi.thor.context.utils.CamelUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
@@ -64,7 +58,6 @@ public class YamlContextLoader implements ContextLoader {
             }
             return modelContext;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new IllegalStateException("");
         }
     }

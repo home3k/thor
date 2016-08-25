@@ -8,8 +8,8 @@ package com.haoyayi.thor.bizgen;
 import com.haoyayi.thor.bizgen.command.CommandItem;
 import com.haoyayi.thor.bizgen.command.Commander;
 import com.haoyayi.thor.bizgen.context.CodegenContextHolder;
-import com.haoyayi.thor.bizgen.load.ContextLoader;
-import com.haoyayi.thor.bizgen.load.YamlContextLoader;
+import com.haoyayi.thor.context.loader.load.ContextLoader;
+import com.haoyayi.thor.context.loader.load.YamlContextLoader;
 import com.haoyayi.thor.bizgen.meta.ModelContext;
 import com.haoyayi.thor.bizgen.processor.ModelProcessor;
 

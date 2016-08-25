@@ -3,9 +3,9 @@
  * All rights reserved.
  */
 
-package com.haoyayi.thor.bizgen.load;
+package com.haoyayi.thor.context.loader;
 
-import com.haoyayi.thor.bizgen.meta.ModelContext;
+import com.haoyayi.thor.context.meta.ModelContext;
 import org.springframework.context.ApplicationContext;
 
 /**

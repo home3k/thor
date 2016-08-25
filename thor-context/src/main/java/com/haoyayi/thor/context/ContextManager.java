@@ -3,10 +3,10 @@
  * All rights reserved.
  */
 
-package com.haoyayi.thor.bizgen.manager;
+package com.haoyayi.thor.context;
 
-import com.haoyayi.thor.context.loader.load.YamlContextLoader;
-import com.haoyayi.thor.bizgen.meta.ModelContext;
+import com.haoyayi.thor.context.loader.YamlContextLoader;
+import com.haoyayi.thor.context.meta.ModelContext;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -45,7 +45,7 @@ public class ContextManager implements ApplicationContextAware {
         } else {
             ModelContext context = contextLoader.load("dict", refresh);
             for (ModelContext dictContext : context.getDict()) {
-                    contextMap.put(dictContext.getName(), dictContext);
+                contextMap.put(dictContext.getName(), dictContext);
             }
             return contextMap.get(model);
         }

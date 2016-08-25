@@ -18,6 +18,7 @@
         <module>thor-facade</module>
         <module>thor-api</module>
         <module>thor-core</module>
+        <module>thor-context</module>
     </modules>
 
     <properties>
@@ -120,6 +121,12 @@
             <dependency>
                 <groupId>com.haoyayi.thor</groupId>
                 <artifactId>thor-core</artifactId>
+                <version>${thor.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.haoyayi.thor</groupId>
+                <artifactId>thor-context</artifactId>
                 <version>${thor.version}</version>
             </dependency>
 
