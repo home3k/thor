@@ -6,7 +6,6 @@
 package com.haoyayi.thor.event;
 
 import com.haoyayi.thor.api.BaseType;
-import com.haoyayi.thor.api.ModelType;
 
 import java.util.Map;
 
@@ -19,13 +18,13 @@ public class ModelDelEvent<T extends BaseType> extends AbstractModelEvent {
 
     private Map<Long, T> id2model;
 
-    private ModelType modelType;
+    private String modelType;
 
     public ModelDelEvent(Object source) {
         super(source);
     }
 
-    public ModelDelEvent(Long optid, Map<Long, T> id2model, ModelType modelType) {
+    public ModelDelEvent(Long optid, Map<Long, T> id2model, String modelType) {
         super(optid);
         this.optid = optid;
         this.id2model = id2model;
@@ -41,11 +40,11 @@ public class ModelDelEvent<T extends BaseType> extends AbstractModelEvent {
     }
 
     @Override
-    public ModelType getModelType() {
+    public String getModelType() {
         return modelType;
     }
 
-    public void setModelType(ModelType modelType) {
+    public void setModelType(String modelType) {
         this.modelType = modelType;
     }
 }

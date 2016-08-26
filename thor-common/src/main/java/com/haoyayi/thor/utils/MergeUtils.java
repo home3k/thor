@@ -142,8 +142,7 @@ public class MergeUtils {
      * @param src
      * @param items
      * @return Map<K,T>
-     * @author sunkai
-     * @date 2012-6-21
+     * @author home3k
      */
     public static <T, S extends Enum<S>, K> Map<K, T> mergeObjectEnumItems(Map<K, T> src, Map<K, Map<S, Object>> items) {
         Map<K, T> result = new LinkedHashMap<K, T>(src);

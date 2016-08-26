@@ -7,9 +7,7 @@ package com.haoyayi.thor.biz;
 
 import com.haoyayi.thor.context.BizContextDict;
 import com.haoyayi.thor.context.BizContextHolder;
-import com.haoyayi.thor.context.InvokeContextHolder;
 import com.haoyayi.thor.impl.base.OpType;
-import com.haoyayi.thor.api.ModelType;
 
 /**
  * @author home3k (sunkai@51haoyayi.com)
@@ -20,7 +18,7 @@ public class BaseProcessor {
      *
      * @param optid
      */
-    protected void init(Long optid, ModelType modelType, OpType action) {
+    protected void init(Long optid, String modelType, OpType action) {
 
         // 设置基本的信息
         BizContextHolder.getInstance().setBizContext(BizContextDict.OPTID, optid);

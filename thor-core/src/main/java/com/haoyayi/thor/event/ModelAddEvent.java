@@ -8,7 +8,6 @@ package com.haoyayi.thor.event;
 import java.util.Map;
 
 import com.haoyayi.thor.api.BaseType;
-import com.haoyayi.thor.api.ModelType;
 
 
 /**
@@ -20,10 +19,10 @@ public class ModelAddEvent<T extends BaseType> extends AbstractModelEvent {
 
     private Map<Long, T> newModels;
 
-    private ModelType modelType;
+    private String modelType;
 
     @Override
-    public ModelType getModelType() {
+    public String getModelType() {
         return this.modelType;
     }
 
@@ -32,7 +31,7 @@ public class ModelAddEvent<T extends BaseType> extends AbstractModelEvent {
     }
 
     public ModelAddEvent(Long optid, Map<Long, T> newModels,
-                         ModelType modelType) {
+                         String modelType) {
         super(optid);
         this.optid = optid;
         this.newModels = newModels;
@@ -47,7 +46,7 @@ public class ModelAddEvent<T extends BaseType> extends AbstractModelEvent {
         this.newModels = newModels;
     }
 
-    public void setModelType(ModelType modelType) {
+    public void setModelType(String modelType) {
         this.modelType = modelType;
     }
 }

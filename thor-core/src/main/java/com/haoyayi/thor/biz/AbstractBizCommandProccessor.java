@@ -5,15 +5,15 @@
 
 package com.haoyayi.thor.biz;
 
+import com.haoyayi.thor.ModelAware;
 import com.haoyayi.thor.api.BaseType;
 import com.haoyayi.thor.api.BaseTypeField;
 import com.haoyayi.thor.api.ErrorCode;
 import com.haoyayi.thor.common.BizError;
 import com.haoyayi.thor.common.BizUtils;
 import com.haoyayi.thor.common.CheckResult;
-import com.haoyayi.thor.conf.BizConf;
+import com.haoyayi.thor.conf.BizContext;
 import com.haoyayi.thor.impl.base.OpType;
-import com.haoyayi.thor.api.ModelType;
 import com.haoyayi.thor.processor.ModelAddProcessor;
 import com.haoyayi.thor.processor.ModelDelProcessor;
 import com.haoyayi.thor.processor.ModelModProcessor;
@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ import java.util.Map;
 /**
  * @author home3k (sunkai@51haoyayi.com)
  */
-public abstract class AbstractBizCommandProccessor<T extends BaseType, V extends BaseTypeField> extends BaseProcessor implements InitializingBean {
+public abstract class AbstractBizCommandProccessor<T extends BaseType, V extends BaseTypeField> extends BaseProcessor implements InitializingBean, ModelAware {
 
     protected abstract Validator<V> getValidator();
 
@@ -45,9 +44,6 @@ public abstract class AbstractBizCommandProccessor<T extends BaseType, V extends
 
     @Autowired
     private ModelDelProcessor<T, V> delModelProcessor;
-
-    protected abstract ModelType getModelType();
-
 
     /**
      * 默认就是用当前action进行处理。 Biz方法可以对其进行overrding. 处理特殊业务.
@@ -115,7 +111,7 @@ public abstract class AbstractBizCommandProccessor<T extends BaseType, V extends
 
                 Map<Long, Map<V, Object>> splitModels = splitContext.get(splitAction);
                 // 3. model分片
-                List<Map<Long, Map<V, Object>>> shardingModels = BizUtils.sharding(splitModels, BizConf.BIZ_SHARDING_THRESHOLD);
+                List<Map<Long, Map<V, Object>>> shardingModels = BizUtils.sharding(splitModels, BizContext.BIZ_SHARDING_THRESHOLD);
 
                 // 4. 分批处理请求
                 for (Map<Long, Map<V, Object>> shardingModel : shardingModels) {

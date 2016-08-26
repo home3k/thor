@@ -13,7 +13,6 @@ import com.haoyayi.thor.event.AbstractModelEvent;
 public abstract class AbstractSynListener<T extends AbstractModelEvent> extends AbstractListener<T> {
 
     @Override
-
     public void onApplicationEvent(T event) {
         if (event.getIsAsync() || !needProcess(event)) {
             return;

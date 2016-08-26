@@ -38,11 +38,12 @@ import org.springframework.util.CollectionUtils;
 import com.haoyayi.thor.api.ConditionPair;
 import com.haoyayi.thor.api.GroupFunc;
 import com.haoyayi.thor.api.MultiConditionPair;
-import com.haoyayi.thor.conf.BizConf;
+import com.haoyayi.thor.conf.BizContext;
 
 /**
- * Desc:
- * User: home3k
+ * @param <T>
+ * @param <C>
+ * @author home3k
  */
 public abstract class AbstractDAO<T extends AbstractBo, C> implements InitializingBean {
 
@@ -323,8 +324,8 @@ public abstract class AbstractDAO<T extends AbstractBo, C> implements Initializi
             return result;
         }
         List<Long> idsList = new ArrayList<Long>(ids);
-        for (int i = 0; i < idsList.size(); i += BizConf.DPL_SHARDING_THRESHOLD) {
-            int endIndex = i + BizConf.DPL_SHARDING_THRESHOLD;
+        for (int i = 0; i < idsList.size(); i += BizContext.DPL_SHARDING_THRESHOLD) {
+            int endIndex = i + BizContext.DPL_SHARDING_THRESHOLD;
             if (endIndex > idsList.size()) {//
                 endIndex = idsList.size();
             }
@@ -400,7 +401,7 @@ public abstract class AbstractDAO<T extends AbstractBo, C> implements Initializi
         return sb.toString();
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected String buildCondition(String field, Object o, List<String> params) {
         if (o == null) {
             return buildNullCondition(field);
@@ -411,12 +412,12 @@ public abstract class AbstractDAO<T extends AbstractBo, C> implements Initializi
         } else if (o instanceof ConditionPair) {
             return buildPairCondition(field, (ConditionPair) o);
         } else if (o instanceof MultiConditionPair) {
-        	List<String> conditonStrings = new ArrayList<String>();
-        	for (Object obj : ((MultiConditionPair) o).getConditionPairs()) {
-        		ConditionPair conditionPair = (ConditionPair) obj;
-        		conditonStrings.add(buildCondition(field, conditionPair, params));
-        	}
-        	return " (" + StringUtils.join(conditonStrings, " and ") + ") ";
+            List<String> conditonStrings = new ArrayList<String>();
+            for (Object obj : ((MultiConditionPair) o).getConditionPairs()) {
+                ConditionPair conditionPair = (ConditionPair) obj;
+                conditonStrings.add(buildCondition(field, conditionPair, params));
+            }
+            return " (" + StringUtils.join(conditonStrings, " and ") + ") ";
         } else {
             return buildEquelsConditon(field, o, params);
         }
@@ -765,8 +766,8 @@ public abstract class AbstractDAO<T extends AbstractBo, C> implements Initializi
         if (offset != null) {
             sb.append(" limit ").append(offset);
         }
-        if (num!=null) {
-            if (offset!=null) {
+        if (num != null) {
+            if (offset != null) {
                 sb.append(" , ").append(num);
             } else {
                 sb.append(" limit ").append(num);

@@ -22,7 +22,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.haoyayi.thor.api.BaseType;
 import com.haoyayi.thor.api.BaseTypeField;
-import com.haoyayi.thor.api.ModelType;
 import com.haoyayi.thor.bizgen.meta.FieldContext;
 import com.haoyayi.thor.bizgen.meta.ModelContext;
 import com.haoyayi.thor.impl.base.OpType;
@@ -41,9 +40,9 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-    public Map<Long, T> process(final Long optid, final ModelType modelType, Map<Long, Map<V, Object>> context) {
-        final Map<String, Map<Long, ModelPair<T, V>>> models = getModelModelFactory(modelType.name()).modModel(optid, context);
-        final ColumnProcessor columnProcessor = getModelColumnProcessor(modelType.name());
+    public Map<Long, T> process(final Long optid, final String modelType, Map<Long, Map<V, Object>> context) {
+        final Map<String, Map<Long, ModelPair<T, V>>> models = getModelModelFactory(modelType).modModel(optid, context);
+        final ColumnProcessor columnProcessor = getModelColumnProcessor(modelType);
         
         // 事务处理
         return (Map<Long, T>) transactionTemplate.execute(new TransactionCallback() {
@@ -57,11 +56,11 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                     Map<String, Map<Long, T>> mappingSubModels = Maps.newHashMap();
                     
                     for (String model : models.keySet()) {
-                        if (!model.equals(modelType.name())) {
+                        if (!model.equals(modelType)) {
                         	if (columnProcessor.isAnytimeNewField(model)) {
                         		ColumnProcessor subColumnProcessor = getModelColumnProcessor(model);
                         		// 清理子对象
-                        		Map<Long, ModelPair<T, V>> mainModels = models.get(modelType.name());
+                        		Map<Long, ModelPair<T, V>> mainModels = models.get(modelType);
                         		ModelContext mc = columnProcessor.getModelContext();
                         		for (FieldContext fc : mc.getField()) {
                         			if (model.equals(fc.getRefModel())) {
@@ -106,45 +105,45 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                     }
 
                     // 后做主model
-                    Map<Long, ModelPair<T, V>> mainModels = models.get(modelType.name());
+                    Map<Long, ModelPair<T, V>> mainModels = models.get(modelType);
                     Map<Long, T> newModels = new HashMap<Long, T>();
                     for (Long id : mainModels.keySet()) {
                         newModels.put(id, mainModels.get(id).getNewModel());
                     }
 
                     if (subProdMod.size() > 0) {
-                        mergeSubmodel(modelType.name(), subProdMod, newModels);
+                        mergeSubmodel(modelType, subProdMod, newModels);
                     }
 
                     for (Long id : mainModels.keySet()) {
                         mainModels.get(id).setNewModel(newModels.get(id));
                     }
 
-                    Map<Long, T> saveResults = getModelRepository(modelType.name()).saveModel(optid, mainModels);
+                    Map<Long, T> saveResults = getModelRepository(modelType).saveModel(optid, mainModels);
                   
                     if (subProdMod.size() > 0) {
                     	setIdForSubModel(subProdMod, saveResults);
                     }
                     
                     if (subMultiProdMod.size() > 0) {
-                        mergeMainModel(modelType.name(), subMultiProdMod, newModels, OpType.MOD);
+                        mergeMainModel(modelType, subMultiProdMod, newModels, OpType.MOD);
                         
                         for (String subModel : subMultiProdMod.keySet()) {
                         		Map<Long, T> index2model = getModelRepository(subModel).addModel(optid, subMultiProdMod.get(subModel));
                         		Map<String, Map<Long, T>> subModels = new HashMap<String, Map<Long, T>>();
                         		subModels.put(subModel, index2model);
-                        		updateSubModelPk(modelType.name(), subModels, newModels);
+                        		updateSubModelPk(modelType, subModels, newModels);
                         }
                     }
                     if (mappingSubModels.size() > 0) {
-                    	mergeMainModel(modelType.name(), mappingSubModels, newModels, OpType.ADD);
+                    	mergeMainModel(modelType, mappingSubModels, newModels, OpType.ADD);
                     }
                     if (mappingSubModels.size() > 0) {
                     	for (String subModel : mappingSubModels.keySet()) {
                     		String subModelType = columnProcessor.getSubModelTypeFromSubModelName(subModel);
                             Map<Long, T> subModels = getModelRepository(subModelType).addModel(optid, mappingSubModels.get(subModel));
                             // 获得映射表对象
-                            FieldContext subFieldContext = getModelColumnProcessor(modelType.name()).getModelContext().getFieldContext(subModel);
+                            FieldContext subFieldContext = getModelColumnProcessor(modelType).getModelContext().getFieldContext(subModel);
                             String mappingModel = subFieldContext.getRefMappingModel();
                             ColumnProcessor<V> mappingColumnProcessor = getModelColumnProcessor(mappingModel);
                             Map<Long, Map<V, Object>> mappingContexts = Maps.newHashMap();
@@ -173,11 +172,11 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                             		for (Long key : origin.keySet()) {
                             			delContext.put(key, new HashMap());
                             		}
-                            		modelDelProcessor.process(optid, ModelType.valueOf(mappingModel), delContext);
+                            		modelDelProcessor.process(optid, mappingModel, delContext);
 //                            		getModelRepository(mappingModel).delModelById(optid, origin);
                             	}
                             }
-                            modelAddProcessor.process(optid, ModelType.valueOf(mappingModel), mappingContexts);
+                            modelAddProcessor.process(optid, mappingModel, mappingContexts);
                         }
                     }
                     // 多对多映射情况下，对于子model直接赋值已存在的id的处理方式
@@ -187,7 +186,7 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                     		Number[] subIds = (Number[]) PropertyUtils.getProperty(model, subModelIdField);
                     		if (ArrayUtils.isNotEmpty(subIds)) {
                     			String subModelName = (String) columnProcessor.getSubModelIdField2subModelField().get(subModelIdField);
-                    			FieldContext subFieldContext = getModelColumnProcessor(modelType.name()).getModelContext().getFieldContext(subModelName);
+                    			FieldContext subFieldContext = getModelColumnProcessor(modelType).getModelContext().getFieldContext(subModelName);
                     			String mappingModel = subModelId2refMappingFields.get(subModelIdField);
                     			ColumnProcessor<V> mappingColumnProcessor = getModelColumnProcessor(mappingModel);
                     			Map<Long, Map<V, Object>> mappingContexts = Maps.newHashMap();
@@ -203,7 +202,7 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                                 		for (Long key : origin.keySet()) {
                                 			delContext.put(key, new HashMap());
                                 		}
-                                		modelDelProcessor.process(optid, ModelType.valueOf(mappingModel), delContext);
+                                		modelDelProcessor.process(optid, mappingModel, delContext);
 //                                		getModelRepository(mappingModel).delModelById(optid, origin);
                                 	}
                     			}
@@ -214,7 +213,7 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                                 	mappingContext.put(subModelIdFieldV, subModelId.longValue());
                                 	mappingContexts.put(index++, mappingContext);
                                 }
-                                modelAddProcessor.process(optid, ModelType.valueOf(mappingModel), mappingContexts);
+                                modelAddProcessor.process(optid, mappingModel, mappingContexts);
                     		}
                     	}
                     }

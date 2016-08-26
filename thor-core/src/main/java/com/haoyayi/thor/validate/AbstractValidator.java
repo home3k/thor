@@ -7,6 +7,7 @@ package com.haoyayi.thor.validate;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.haoyayi.thor.ModelAware;
 import com.haoyayi.thor.api.*;
 import com.haoyayi.thor.common.BizError;
 import com.haoyayi.thor.common.CheckResult;
@@ -29,9 +30,7 @@ import java.util.Map;
  *
  * @author home3k (sunkai@51haoyayi.com)
  */
-public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeField, C extends ConditionField> implements Validator<R>, ConditionValidator<C>, InitializingBean {
-
-    protected abstract ModelType getModelType();
+public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeField, C extends ConditionField> implements Validator<R>, ConditionValidator<C>, InitializingBean, ModelAware {
 
     @Autowired
     private ProcessorContext processorContext;
@@ -41,7 +40,7 @@ public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeFi
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        columnProcessor = processorContext.getConverter(getModelType().name());
+        columnProcessor = processorContext.getConverter(getModelType());
     }
 
     @Override

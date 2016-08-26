@@ -1,27 +1,24 @@
-package com.haoyayi.thor.utils;
+/*
+ * Copyright 2014 51haoyayi.com Inc Limited.
+ *  All rights reserved.
+ */
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+package com.haoyayi.thor.utils;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.converters.AbstractConverter;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 /**
- * Created with IntelliJ IDEA.
- * 避免了PropertyUtils和BeanUtils的属性拷贝问题
- * User: siriusjen
- * Date: 15/4/20
+ * @author home3k
  */
 public class ConertUtils {
 

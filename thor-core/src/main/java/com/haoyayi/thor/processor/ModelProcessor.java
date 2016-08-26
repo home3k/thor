@@ -7,7 +7,6 @@ package com.haoyayi.thor.processor;
 
 import com.haoyayi.thor.api.BaseType;
 import com.haoyayi.thor.api.BaseTypeField;
-import com.haoyayi.thor.api.ModelType;
 
 import java.util.Map;
 
@@ -20,5 +19,5 @@ public interface ModelProcessor<T extends BaseType, V extends BaseTypeField> {
      * @param context
      * @return
      */
-    Map<Long, T> process(Long optid, ModelType model,  Map<Long, Map<V, Object>> context);
+    Map<Long, T> process(Long optid, String model,  Map<Long, Map<V, Object>> context);
 }

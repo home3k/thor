@@ -6,9 +6,9 @@
 package com.haoyayi.thor.factory;
 
 import com.google.common.collect.Maps;
+import com.haoyayi.thor.ModelAware;
 import com.haoyayi.thor.api.BaseType;
 import com.haoyayi.thor.api.BaseTypeField;
-import com.haoyayi.thor.api.ModelType;
 import com.haoyayi.thor.bizgen.manager.ContextManager;
 import com.haoyayi.thor.bizgen.meta.FieldContext;
 import com.haoyayi.thor.bizgen.meta.ModelContext;
@@ -33,7 +33,7 @@ import java.util.*;
  * @title
  * @description ModelFactory抽象类
  */
-public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTypeField> implements ModelFactory<T, V>, InitializingBean {
+public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTypeField> implements ModelFactory<T, V>, InitializingBean, ModelAware {
 
     @Autowired
     private ContextManager contextManager;
@@ -45,8 +45,6 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
     
 
     Map<V, Set<V>> field4OtherFields = new HashMap<V, Set<V>>();
-
-    protected abstract ModelType getModelType();
 
     public Set<V> addRelatedFields(Set<V> fields) {
         Set<V> result = new HashSet<V>();
@@ -225,7 +223,7 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
         }
         Map<Long, T> oldModels = buildOldModel(context);
         refreshOldModels(oldModels, model2result);
-        model2result.put(getModelType().name(), createModel4Mod(optid, oldModels, context));
+        model2result.put(getModelType(), createModel4Mod(optid, oldModels, context));
         return model2result;
     }
 

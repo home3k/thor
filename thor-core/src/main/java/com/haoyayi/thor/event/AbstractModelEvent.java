@@ -4,7 +4,7 @@
  */
 package com.haoyayi.thor.event;
 
-import com.haoyayi.thor.api.ModelType;
+import com.haoyayi.thor.ModelAware;
 import com.haoyayi.thor.context.BizContextDict;
 import com.haoyayi.thor.context.BizContextHolder;
 import com.haoyayi.thor.context.InvokeContextDict;
@@ -19,7 +19,7 @@ import java.util.HashMap;
  *
  * @author home3k (sunkai@51haoyayi.com)
  */
-public abstract class AbstractModelEvent extends ApplicationEvent {
+public abstract class AbstractModelEvent extends ApplicationEvent implements ModelAware {
 
     protected HashMap<InvokeContextDict, Object> invokeContext;
 
@@ -28,8 +28,6 @@ public abstract class AbstractModelEvent extends ApplicationEvent {
     protected Long optid;
     
     private Boolean isAsync = Boolean.FALSE;
-
-    public abstract ModelType getModelType();
 
     public AbstractModelEvent(Object source) {
         super(source);

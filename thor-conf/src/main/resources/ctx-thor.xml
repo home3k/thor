@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2014 51haoyayi.com Inc Limited.
+  ~  All rights reserved.
+  -->
+
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+    <beans:bean id="serverPropertyConfigurer"
+                class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <beans:property name="propFile">
+            <beans:value>disconf.properties</beans:value>
+        </beans:property>
+        <beans:property name="props">
+            <beans:map>
+                <beans:entry key="server" value="thor.properties"></beans:entry>
+            </beans:map>
+        </beans:property>
+        <beans:property name="placeholderPrefix">
+            <beans:value>$+</beans:value>
+        </beans:property>
+        <beans:property name="placeholderSuffix">
+            <beans:value>+</beans:value>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="serverContext" class="com.haoyayi.thor.conf.ServerContext">
+        <beans:property name="serverPath" value="$+server.path+"/>
+        <beans:property name="port" value="$+server.port+"/>
+        <beans:property name="ioWorkerCount" value="$+server.ioWorkerCount+"/>
+        <beans:property name="executorThreadCount" value="$+server.executorThreadCount+"/>
+        <beans:property name="maxRequestSize" value="$+server.maxRequestSize+"/>
+    </beans:bean>
+
+    <beans:bean id="bizContext" class="com.haoyayi.thor.conf.BizContext">
+        <beans:property name="dplShardingThreshold" value="$+biz.threhold.dplSharding+"/>
+        <beans:property name="bizShardingThreshold" value="$+biz.threhold.batchRequestSharding+"/>
+        <beans:property name="maxResponseThreshold" value="$+biz.threhold.maxResponse+"/>
+    </beans:bean>
+
+    <beans:bean id="thorContext" class="com.haoyayi.thor.conf.ThorContext">
+        <beans:property name="modelPath" value="$+biz.modelPath+"/>
+        <beans:property name="dictPath" value="$+biz.dictPath+"/>
+        <beans:property name="apiPath" value="$+biz.apiPath+"/>
+        <beans:property name="bizPath" value="$+biz.bizPath+"/>
+        <beans:property name="controllerPath" value="$+biz.controllerPath+"/>
+        <beans:property name="dalPath" value="$+biz.dalPath+"/>
+    </beans:bean>
+
+    <context:component-scan base-package="com.haoyayi.thor.server"/>
+    <context:component-scan base-package="com.haoyayi.thor.server.heartbeat"/>
+    <context:component-scan base-package="com.haoyayi.thor.context"/>
+
+</beans:beans>

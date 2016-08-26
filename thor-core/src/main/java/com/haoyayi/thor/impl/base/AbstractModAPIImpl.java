@@ -5,6 +5,7 @@
 
 package com.haoyayi.thor.impl.base;
 
+import com.haoyayi.thor.ModelAware;
 import com.haoyayi.thor.api.*;
 import com.haoyayi.thor.api.Error;
 import com.haoyayi.thor.biz.BizCommandProcessor;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @description 修改操作的基本抽象类
  */
 public abstract class AbstractModAPIImpl<T extends BaseType, V extends BaseTypeField> extends
-        AbstractAPI implements InitializingBean {
+        AbstractAPI implements InitializingBean, ModelAware {
 
     private static Logger LOG = LoggerFactory.getLogger(AbstractModAPIImpl.class);
 
@@ -41,13 +42,11 @@ public abstract class AbstractModAPIImpl<T extends BaseType, V extends BaseTypeF
 
     private ColumnProcessor<V> columnProcessor;
 
-    protected abstract ModelType getModelType();
-
     @Override
     public void afterPropertiesSet() throws Exception {
 
         // 初始化columnProcessor
-        columnProcessor = processorContext.getConverter(getModelType().name());
+        columnProcessor = processorContext.getConverter(getModelType());
     }
 
     /**

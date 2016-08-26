@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.haoyayi.thor.ModelAware;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +33,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.haoyayi.thor.api.BaseTypeField;
 import com.haoyayi.thor.api.ErrorCode;
-import com.haoyayi.thor.api.ModelType;
 import com.haoyayi.thor.bizgen.CamelUtils;
 import com.haoyayi.thor.bizgen.manager.ContextManager;
 import com.haoyayi.thor.bizgen.meta.FieldContext;
@@ -45,7 +45,7 @@ import com.haoyayi.thor.utils.DateUtils;
 /**
  * @author home3k (sunkai@51haoyayi.com)
  */
-public abstract class AbstractColumnProcessor<R extends BaseTypeField> implements ColumnProcessor<R>, InitializingBean, ApplicationContextAware {
+public abstract class AbstractColumnProcessor<R extends BaseTypeField> implements ColumnProcessor<R>, InitializingBean, ApplicationContextAware, ModelAware {
 
     @Autowired
     protected ContextManager contextManager;
@@ -95,8 +95,6 @@ public abstract class AbstractColumnProcessor<R extends BaseTypeField> implement
     
     protected static String DATE_TYPE = "java.util.Date";
 
-    protected abstract ModelType getModelType();
-
     public Boolean isDict() {
         return false;
     }
@@ -118,9 +116,9 @@ public abstract class AbstractColumnProcessor<R extends BaseTypeField> implement
         // 初始化modelcontext
         if (modelContext == null) {
             if (isDict()) {
-                modelContext = contextManager.getDictContext(this.getModelType().name());
+                modelContext = contextManager.getDictContext(this.getModelType());
             } else {
-                modelContext = contextManager.getContext(this.getModelType().name());
+                modelContext = contextManager.getContext(this.getModelType());
             }
         }
 

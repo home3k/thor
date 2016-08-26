@@ -29,15 +29,15 @@ public class ModelDelProcessor<T extends BaseType, V extends BaseTypeField> exte
 
     @SuppressWarnings("unchecked")
 	@Override
-    public Map<Long, T> process(final Long optid, final ModelType modelType, Map<Long, Map<V, Object>> context) {
-        final Map<Long, T> models = getModelModelFactory(modelType.name()).delModel(optid, context);
+    public Map<Long, T> process(final Long optid, final String modelType, Map<Long, Map<V, Object>> context) {
+        final Map<Long, T> models = getModelModelFactory(modelType).delModel(optid, context);
 
         // 事务处理
         return (Map<Long, T>) transactionTemplate.execute(new TransactionCallback() {
             public Object doInTransaction(TransactionStatus status) {
                 try {
 
-                    getModelRepository(modelType.name()).delModelById(optid, models);
+                    getModelRepository(modelType).delModelById(optid, models);
                     // 级联删除多对多关系中的映射表数据
                     casDelRefMappings(optid, modelType, models);
                     return models;
@@ -47,8 +47,8 @@ public class ModelDelProcessor<T extends BaseType, V extends BaseTypeField> exte
                 }
             }
 
-			private void casDelRefMappings(Long optid, ModelType modelType, final Map<Long, T> mainModels) {
-				ColumnProcessor<V> columnProcessor = getModelColumnProcessor(modelType.name());
+			private void casDelRefMappings(Long optid, String modelType, final Map<Long, T> mainModels) {
+				ColumnProcessor<V> columnProcessor = getModelColumnProcessor(modelType);
 				List<FieldContext> mappingFields = columnProcessor.getModelContext().getRefMappingModelField();
 				for (FieldContext mappingField : mappingFields) {
 					// 映射表对象名

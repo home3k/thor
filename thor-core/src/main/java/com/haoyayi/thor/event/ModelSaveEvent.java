@@ -7,7 +7,6 @@ package com.haoyayi.thor.event;
 
 import com.haoyayi.thor.api.BaseType;
 import com.haoyayi.thor.api.BaseTypeField;
-import com.haoyayi.thor.api.ModelType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,13 +29,13 @@ public class ModelSaveEvent<T extends BaseType, C extends BaseTypeField> extends
     
     private Map<Long, Set<C>> allFields;
 
-    private ModelType modelType;
+    private String modelType;
 
     public ModelSaveEvent(Object source) {
         super(source);
     }
 
-    public ModelSaveEvent(Long optid, Map<Long, T> oldmodels, Map<Long, T> newmodels, Map<Long, Map<C, Object>> changeMap, ModelType modelType) {
+    public ModelSaveEvent(Long optid, Map<Long, T> oldmodels, Map<Long, T> newmodels, Map<Long, Map<C, Object>> changeMap, String modelType) {
         super(optid);
         this.optid = optid;
         this.changeMap = changeMap;
@@ -78,11 +77,11 @@ public class ModelSaveEvent<T extends BaseType, C extends BaseTypeField> extends
     }
 
     @Override
-    public ModelType getModelType() {
+    public String getModelType() {
         return modelType;
     }
 
-    public void setModelType(ModelType modelType) {
+    public void setModelType(String modelType) {
         this.modelType = modelType;
     }
 
