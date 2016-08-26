@@ -17,11 +17,15 @@ public class BoField {
 
     private String bo;
     private String BO;
+
     private Boolean isArray = false;
+
     private Boolean newDate = false;
     private Boolean updateDate = false;
+
     private String date;
     private String DATE;
+
     private String refpk;
     private String REFPK;
 

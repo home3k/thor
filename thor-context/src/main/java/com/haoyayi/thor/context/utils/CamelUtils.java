@@ -6,6 +6,8 @@
 package com.haoyayi.thor.context.utils;
 
 /**
+ * Camel utility.
+ *
  * @author home3k (sunkai@51haoyayi.com)
  */
 public class CamelUtils {
