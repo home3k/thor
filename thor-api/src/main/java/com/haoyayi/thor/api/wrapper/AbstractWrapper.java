@@ -5,6 +5,7 @@
 
 package com.haoyayi.thor.api.wrapper;
 
+import com.haoyayi.thor.api.HeaderExtraDict;
 import com.haoyayi.thor.api.RequestExtraDict;
 
 import java.util.Map;
@@ -15,40 +16,16 @@ import java.util.Map;
 public abstract class AbstractWrapper {
 
     /**
-     * 操作人id
-     */
-    protected Long optid;
-
-    /**
-     * 请求的token信息
-     */
-    protected String token;
-    
-    /**
      * 接口版本
      */
     protected String version;
+
+    protected Map<HeaderExtraDict, Object> headExtra;
 
     /**
      * 特殊信息
      */
     protected Map<RequestExtraDict, Object> extra;
-
-    public Long getOptid() {
-        return optid;
-    }
-
-    public void setOptid(Long optid) {
-        this.optid = optid;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public Map<RequestExtraDict, Object> getExtra() {
         return extra;
@@ -66,4 +43,11 @@ public abstract class AbstractWrapper {
 		this.version = version;
 	}
 
+    public Map<HeaderExtraDict, Object> getHeadExtra() {
+        return headExtra;
+    }
+
+    public void setHeadExtra(Map<HeaderExtraDict, Object> headExtra) {
+        this.headExtra = headExtra;
+    }
 }
