@@ -38,20 +38,19 @@ public abstract class AbstractQueryAPIImpl<T extends BaseType, V extends BaseTyp
     /**
      * 查询Count处理主流程
      *
-     * @param optid
      * @param queryRequest
      * @return
      */
-    protected CountResponse query(Long optid, CountRequest<R> queryRequest) {
+    protected CountResponse query(CountRequest<R> queryRequest) {
         CountResponse response = new CountResponse();
         try {
             // 1. 参数验证
-            if (!checkParams(optid, response, queryRequest)) {
+            if (!checkParams(response, queryRequest)) {
                 return response;
             }
 
             // 2. 进行build处理
-            CheckResult<Long> result = getQueryFacade().query(optid, queryRequest.getConditions());
+            CheckResult<Long> result = getQueryFacade().query(queryRequest.getConditions());
 
             // 3. 处理返回结果
             return convertCountResponse(result);
@@ -64,20 +63,19 @@ public abstract class AbstractQueryAPIImpl<T extends BaseType, V extends BaseTyp
     /**
      * 查询Group by 处理流程
      *
-     * @param optid
      * @param queryRequest
      * @return
      */
-    protected QueryGroupByResponse query(Long optid, QueryGroupByRequest<R, V> queryRequest) {
+    protected QueryGroupByResponse query(QueryGroupByRequest<R, V> queryRequest) {
         QueryGroupByResponse response = new QueryGroupByResponse();
         try {
             // 1. 参数验证
-            if (!checkParams(optid, response, queryRequest)) {
+            if (!checkParams(response, queryRequest)) {
                 return response;
             }
 
             // 2. 进行build处理
-            CheckResult<List<Map<String, Object>>> result = getQueryFacade().query(optid, queryRequest.getConditions(), queryRequest.getGroupByFields(), queryRequest.getGroupFuncMap());
+            CheckResult<List<Map<String, Object>>> result = getQueryFacade().query(queryRequest.getConditions(), queryRequest.getGroupByFields(), queryRequest.getGroupFuncMap());
 
             // 3. 处理返回结果
             return convertGroupByResponse(result);
@@ -91,20 +89,19 @@ public abstract class AbstractQueryAPIImpl<T extends BaseType, V extends BaseTyp
     /**
      * 查询处理主流程
      *
-     * @param optid
      * @param queryRequest
      * @return
      */
-    protected QueryResponse<T> query(Long optid, QueryRequest<R> queryRequest) {
+    protected QueryResponse<T> query(QueryRequest<R> queryRequest) {
         QueryResponse<T> response = new QueryResponse<T>();
         try {
             // 1. 参数验证
-            if (!checkParams(optid, response, queryRequest)) {
+            if (!checkParams(response, queryRequest)) {
                 return response;
             }
 
             // 2. 进行build处理
-            Map<Long, CheckResult<T>> result = getQueryFacade().query(optid, queryRequest.getConditions(),
+            Map<Long, CheckResult<T>> result = getQueryFacade().query(queryRequest.getConditions(),
                     queryRequest.getOptions(), new HashSet<String>(Arrays.asList(queryRequest.getFields())));
 
             // 3. 处理返回结果

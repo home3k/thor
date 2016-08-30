@@ -25,8 +25,6 @@ public abstract class AbstractModelEvent extends ApplicationEvent implements Mod
 
     protected HashMap<BizContextDict, Object> bizContext;
 
-    protected Long optid;
-    
     private Boolean isAsync = Boolean.FALSE;
 
     public AbstractModelEvent(Object source) {
@@ -34,14 +32,6 @@ public abstract class AbstractModelEvent extends ApplicationEvent implements Mod
         // 多线程情况下，通过event，进行context clone。
         setBizContext(BizContextHolder.getInstance().getBizMap());
         setInvokeContext(InvokeContextHolder.getInstance().getInvokeMap());
-    }
-
-    public Long getOptid() {
-        return optid;
-    }
-
-    public void setOptid(Long optid) {
-        this.optid = optid;
     }
 
     public HashMap<InvokeContextDict, Object> getInvokeContext() {

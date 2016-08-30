@@ -5,19 +5,13 @@
 
 package com.haoyayi.thor.repository;
 
-import com.haoyayi.thor.api.ModelType;
+import com.haoyayi.thor.ModelAware;
 
 /**
  * 基本Repository
  *
  * @author home3k (sunkai@51haoyayi.com)
  */
-public abstract class BaseModelRepository {
-    /**
-     * Repo的模型类型
-     *
-     * @return
-     */
-    protected abstract ModelType getModelType();
+public abstract class BaseModelRepository implements ModelAware {
 
 }

@@ -16,6 +16,6 @@ import java.util.List;
  */
 public interface ConditionValidator< C extends ConditionField> {
 
-    CheckResult<List<ConditionPair<C>>> validate(Long optid, List<ConditionPair<C>> conditions);
+    CheckResult<List<ConditionPair<C>>> validate(List<ConditionPair<C>> conditions);
 
 }

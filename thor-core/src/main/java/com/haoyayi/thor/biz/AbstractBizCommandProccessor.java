@@ -87,20 +87,20 @@ public abstract class AbstractBizCommandProccessor<T extends BaseType, V extends
 
     private static Logger LOG = LoggerFactory.getLogger(AbstractBizCommandProccessor.class);
 
-    protected Map<Long, CheckResult<T>> build(Long optid, Map<Long, Map<V, Object>> context, OpType action) {
+    protected Map<Long, CheckResult<T>> build(Map<Long, Map<V, Object>> context, OpType action) {
         try {
             // 1. 初始化
-            init(optid, getModelType(), action);
+            init(getModelType(), action);
 
             // 2. 验证
             Map<Long, CheckResult<Map<V, Object>>> validateResult =
-                    getValidator().validate(optid, context, action);
+                    getValidator().validate(context, action);
 
             // 保存错误信息，获得待处理数据.
             Map<Long, Map<V, Object>> okModels = ErrorUtils.saveCheckResultErrors(validateResult);
 
             if (okModels == null || okModels.size() == 0) {
-                return BizUtils.returnModels(optid, null);
+                return BizUtils.returnModels(null);
             }
 
             Map<OpType, Map<Long, Map<V, Object>>> splitContext = splitContext(okModels, action);
@@ -116,7 +116,7 @@ public abstract class AbstractBizCommandProccessor<T extends BaseType, V extends
                 // 4. 分批处理请求
                 for (Map<Long, Map<V, Object>> shardingModel : shardingModels) {
                     try {
-                        afterProcess.putAll(getProcessor(splitAction).process(optid, getModelType(), shardingModel));
+                        afterProcess.putAll(getProcessor(splitAction).process(getModelType(), shardingModel));
                     } catch (Exception e) {
                         // 分片处理中的异常。
                         LOG.error("Biz Command Proccessor error:", e);
@@ -132,7 +132,7 @@ public abstract class AbstractBizCommandProccessor<T extends BaseType, V extends
             afterProcess = renderModel(afterProcess);
 
             // 6. 模型合并返回。
-            return BizUtils.returnModels(optid, afterProcess);
+            return BizUtils.returnModels(afterProcess);
 
         } catch (Exception e) {
             // 全局异常。 直接返回

@@ -8,7 +8,7 @@ package com.haoyayi.thor.processor;
 import com.google.common.collect.Maps;
 import com.haoyayi.thor.api.BaseType;
 import com.haoyayi.thor.api.BaseTypeField;
-import com.haoyayi.thor.bizgen.meta.FieldContext;
+import com.haoyayi.thor.context.meta.FieldContext;
 import com.haoyayi.thor.impl.base.OpType;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -27,8 +27,8 @@ public class ModelAddProcessor<T extends BaseType, V extends BaseTypeField> exte
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public Map<Long, T> process(final Long optid, final String modelType, Map<Long, Map<V, Object>> context) {
-        final Map<String, Map<Long, T>> models = getModelModelFactory(modelType).createModel(optid, context);
+    public Map<Long, T> process(final String modelType, Map<Long, Map<V, Object>> context) {
+        final Map<String, Map<Long, T>> models = getModelModelFactory(modelType).createModel(context);
         final ColumnProcessor columnProcessor = getModelColumnProcessor(modelType);
         // 事务处理
         return (Map<Long, T>) transactionTemplate.execute(new TransactionCallback() {
@@ -45,7 +45,7 @@ public class ModelAddProcessor<T extends BaseType, V extends BaseTypeField> exte
                         	} else if (columnProcessor.isMappingSubModelField(model)) {
                         		mappingSubModels.put(model, models.get(model));
                         	} else {
-                        		Map<Long, T> subModels = getModelRepository(model).addModel(optid, models.get(model));
+                        		Map<Long, T> subModels = getModelRepository(model).addModel(models.get(model));
                         		subProdMod.put(model, subModels);
                         	}
                         }
@@ -55,7 +55,7 @@ public class ModelAddProcessor<T extends BaseType, V extends BaseTypeField> exte
                     if (subProdMod.size() > 0) {
                         mergeSubmodel(modelType, subProdMod, mainModels);
                     }
-                    mainModels = getModelRepository(modelType).addModel(optid, mainModels);
+                    mainModels = getModelRepository(modelType).addModel(mainModels);
                     if (subProdMod.size() > 0) {
                     	setIdForSubModel(subProdMod, mainModels);
                     }
@@ -65,7 +65,7 @@ public class ModelAddProcessor<T extends BaseType, V extends BaseTypeField> exte
 
                     if (subMultiProdMod.size() > 0) {
                         for (String model : subMultiProdMod.keySet()) {
-                            getModelRepository(model).addModel(optid, subMultiProdMod.get(model));
+                            getModelRepository(model).addModel(subMultiProdMod.get(model));
                         }
                     }
                     if (mappingSubModels.size() > 0) {
@@ -75,7 +75,7 @@ public class ModelAddProcessor<T extends BaseType, V extends BaseTypeField> exte
                     if (mappingSubModels.size() > 0) {
                     	for (String subModel : mappingSubModels.keySet()) {
                     		String subModelType = columnProcessor.getSubModelTypeFromSubModelName(subModel);
-                            Map<Long, T> subModels = getModelRepository(subModelType).addModel(optid, mappingSubModels.get(subModel));
+                            Map<Long, T> subModels = getModelRepository(subModelType).addModel(mappingSubModels.get(subModel));
                             // 获得映射表对象
                             FieldContext subFieldContext = getModelColumnProcessor(modelType).getModelContext().getFieldContext(subModel);
                             String mappingModel = subFieldContext.getRefMappingModel();
@@ -94,7 +94,7 @@ public class ModelAddProcessor<T extends BaseType, V extends BaseTypeField> exte
                             	mappingContext.put(subModelIdField, t.getId());
                             	mappingContexts.put(index++, mappingContext);
                             }
-                            process(optid, mappingModel, mappingContexts);
+                            process(mappingModel, mappingContexts);
                         }
                     }
                     // 多对多映射情况下，对于子model直接赋值已存在的id的处理方式
@@ -117,7 +117,7 @@ public class ModelAddProcessor<T extends BaseType, V extends BaseTypeField> exte
                                 	mappingContext.put(subModelIdFieldV, subModelId.longValue());
                                 	mappingContexts.put(index++, mappingContext);
                                 }
-                                process(optid, mappingModel, mappingContexts);
+                                process(mappingModel, mappingContexts);
                     		}
                     	}
                     }

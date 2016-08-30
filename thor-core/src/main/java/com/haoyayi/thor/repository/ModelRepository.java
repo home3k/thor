@@ -43,15 +43,15 @@ public interface ModelRepository<T extends BaseType, R extends BaseTypeField> {
      * @return
      */
     Map<Long, Map<R, Object>> getModelField(Set<Long> ids, Set<R> fields);
-    
+
     /**
      * 根据条件查询
-     * @param optid
+     *
      * @param conditions
      * @param fields
      * @return
      */
-    Map<Long, T> getModelByCondition(Long optid, Map<R, Object> conditions, Set<R> fields);
+    Map<Long, T> getModelByCondition(Map<R, Object> conditions, Set<R> fields);
 
     /**
      * 根据主键id删除物料对象
@@ -59,26 +59,24 @@ public interface ModelRepository<T extends BaseType, R extends BaseTypeField> {
      * @param id2model
      * @return
      */
-    void delModelById(Long opuid, Map<Long, T> id2model);
+    void delModelById(Map<Long, T> id2model);
 
 
     /**
      * 添加对象
      *
-     * @param optid
      * @param id2model
      * @return
      */
-    Map<Long, T> addModel(Long optid, Map<Long, T> id2model);
+    Map<Long, T> addModel(Map<Long, T> id2model);
 
     /**
      * 修改对象
      *
-     * @param optid
      * @param models
      * @return
      */
-    Map<Long, T> saveModel(Long optid, Map<Long, ModelPair<T, R>> models);
+    Map<Long, T> saveModel(Map<Long, ModelPair<T, R>> models);
 
     /**
      * field填充为T

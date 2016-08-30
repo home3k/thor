@@ -5,15 +5,24 @@
 
 package com.haoyayi.thor.repository;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.haoyayi.thor.api.*;
+import com.haoyayi.thor.context.meta.FieldContext;
+import com.haoyayi.thor.context.meta.ModelContext;
+import com.haoyayi.thor.dal.base.AbstractDictDao;
+import com.haoyayi.thor.dal.base.BoColumn;
+import com.haoyayi.thor.dal.base.DictStoreType;
+import com.haoyayi.thor.event.EventHolder;
+import com.haoyayi.thor.event.ModelAddEvent;
+import com.haoyayi.thor.event.ModelDelEvent;
+import com.haoyayi.thor.event.ModelSaveEvent;
+import com.haoyayi.thor.model.ModelPair;
+import com.haoyayi.thor.processor.ColumnProcessor;
+import com.haoyayi.thor.processor.ProcessorContext;
+import com.haoyayi.thor.utils.MergeUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -26,36 +35,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.haoyayi.dbrouter.core.anno.DBOperationDesc;
-import com.haoyayi.thor.api.BaseType;
-import com.haoyayi.thor.api.BaseTypeField;
-import com.haoyayi.thor.api.ConditionField;
-import com.haoyayi.thor.api.ConditionPair;
-import com.haoyayi.thor.api.GroupFunc;
-import com.haoyayi.thor.api.ModelType;
-import com.haoyayi.thor.api.MultiConditionPair;
-import com.haoyayi.thor.api.Option;
-import com.haoyayi.thor.api.OptionLimit;
-import com.haoyayi.thor.api.OptionOrderby;
-import com.haoyayi.thor.bizgen.meta.FieldContext;
-import com.haoyayi.thor.bizgen.meta.ModelContext;
-import com.haoyayi.thor.dal.base.AbstractDictDao;
-import com.haoyayi.thor.dal.base.BoColumn;
-import com.haoyayi.thor.dal.base.DictStoreType;
-import com.haoyayi.thor.event.EventHolder;
-import com.haoyayi.thor.event.ModelAddEvent;
-import com.haoyayi.thor.event.ModelDelEvent;
-import com.haoyayi.thor.event.ModelSaveEvent;
-import com.haoyayi.thor.model.ModelPair;
-import com.haoyayi.thor.processor.ColumnProcessor;
-import com.haoyayi.thor.processor.ProcessorContext;
-import com.haoyayi.thor.utils.MergeUtils;
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * @param <T>
@@ -80,31 +62,23 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
     /**
      * 添加model到db
      *
-     * @param optid
      * @param material
      * @return
      */
-    protected abstract Map<Long, T> addModel2DB(Long optid, List<T> material);
+    protected abstract Map<Long, T> addModel2DB(List<T> material);
 
     /**
      * 保存更新到db
      */
-    protected abstract void saveData2DB(Long opuid, Map<Long, Map<R, Object>> modelid2saver,
+    protected abstract void saveData2DB(Map<Long, Map<R, Object>> modelid2saver,
                                         Map<Long, T> oldmodel, Map<Long, T> newmodel);
 
     /**
      * 进行db删除
      *
-     * @param opuid
      * @param id2model
      */
-    protected abstract void delModel2DB(Long opuid, Map<Long, T> id2model);
-
-    /**
-     * @return
-     */
-    protected abstract ModelType getModelType();
-
+    protected abstract void delModel2DB(Map<Long, T> id2model);
 
     protected abstract Map<Long, T> getModelFromDB(Set<Long> ids);
 
@@ -176,7 +150,7 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
         return dbData;
     }
 
-    public Map<Long, T> getModelByCondition(Long optid, Map<R, Object> conditions, Set<R> fields) {
+    public Map<Long, T> getModelByCondition(Map<R, Object> conditions, Set<R> fields) {
 
         Map<Long, Map<R, Object>> modelFields = getModelFieldFromDB(conditions, fields);
         Set<Long> delIds = Sets.newHashSet();
@@ -190,9 +164,7 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
-    @DBOperationDesc(db = "WRITE")
-    public Map<Long, T> saveModel(Long opuid, Map<Long, ModelPair<T, R>> models) {
+    public Map<Long, T> saveModel(Map<Long, ModelPair<T, R>> models) {
 
         Map<Long, Map<R, Object>> modelid2saver = new HashMap<Long, Map<R, Object>>();
         Map<Long, T> oldModels = new HashMap<Long, T>();
@@ -212,13 +184,13 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
             }
         }
 
-        saveData2DB(opuid, modelid2saver, oldModels, newModels);
+        saveData2DB(modelid2saver, oldModels, newModels);
 
         // 更新缓存
         // 分field暂时不更新
         // saveModel2Cache(newModels);
 
-        publishSaveEvent(opuid, oldModels, newModels, modelid2saver);
+        publishSaveEvent(oldModels, newModels, modelid2saver);
 
         return newModels;
     }
@@ -232,9 +204,7 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
 
     protected abstract Map<Long, Map<R, Object>> getModelFieldFromDB(Map<R, Object> conditions, Set<R> fields);
 
-    @DBOperationDesc(db = "WRITE")
-    @Transactional(rollbackFor = Exception.class)
-    public Map<Long, T> addModel(Long optid, Map<Long, T> id2model) {
+    public Map<Long, T> addModel(Map<Long, T> id2model) {
 
         Map<Long, T> result = new HashMap<Long, T>();
      // 修一个add方法后索引值改变的坑，如果改所有repository代码代价较大，这个通用处理下。
@@ -253,7 +223,7 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
             mapping.put(index++, key);
         }
 
-        addResult = addModel2DB(optid, addModels);
+        addResult = addModel2DB(addModels);
         for (Long i : addResult.keySet()) {
         	T t = addResult.get(i);
         	Long key = mapping.get(i);
@@ -266,7 +236,7 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
 
         saveModel2Cache(result);
 
-        publishAddEvent(optid, result);
+        publishAddEvent(result);
 
         return result;
     }
@@ -278,16 +248,14 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
         }
     }
 
-    @DBOperationDesc(db = "WRITE")
-    @Transactional(rollbackFor = Exception.class)
-    public void delModelById(Long optid, Map<Long, T> id2model) {
+    public void delModelById(Map<Long, T> id2model) {
 
-        delModel2DB(optid, id2model);
+        delModel2DB(id2model);
 
         // 从threadlocal中删除model
         removeFromThreadLocal(id2model);
 
-        publishDelEvent(optid, id2model);
+        publishDelEvent(id2model);
 
     }
 
@@ -295,24 +263,24 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
         return true;
     }
 
-    protected void publishDelEvent(Long opuid, Map<Long, T> id2model) {
+    protected void publishDelEvent(Map<Long, T> id2model) {
         if (needPublish()) {
-        	ModelDelEvent<T> event = new ModelDelEvent<T>(opuid, id2model, getModelType());
+        	ModelDelEvent<T> event = new ModelDelEvent<T>(id2model, getModelType());
         	EventHolder.getThreadEvents().add(event);
         	applicationContext.publishEvent(event);
         }
     }
 
-    protected void publishAddEvent(Long opuid, Map<Long, T> newModels) {
-    	ModelAddEvent<T> event = new ModelAddEvent<T>(opuid, newModels, getModelType());
+    protected void publishAddEvent(Map<Long, T> newModels) {
+    	ModelAddEvent<T> event = new ModelAddEvent<T>(newModels, getModelType());
     	EventHolder.getThreadEvents().add(event);
         applicationContext.publishEvent(event);
     }
 
-    protected void publishSaveEvent(Long opuid, Map<Long, T> oldmodels, Map<Long, T> newmodels,
+    protected void publishSaveEvent(Map<Long, T> oldmodels, Map<Long, T> newmodels,
                                     Map<Long, Map<R, Object>> modelid2saver) {
         if (needPublish()) {
-        	ModelSaveEvent<T, R> event = new ModelSaveEvent<T, R>(opuid, oldmodels, newmodels, modelid2saver, getModelType());
+        	ModelSaveEvent<T, R> event = new ModelSaveEvent<T, R>(oldmodels, newmodels, modelid2saver, getModelType());
         	EventHolder.getThreadEvents().add(event);
         	applicationContext.publishEvent(event);
         }
@@ -325,7 +293,7 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        columnProcessor = processorContext.getConverter(getModelType().name());
+        columnProcessor = processorContext.getConverter(getModelType());
         this.modelContext = columnProcessor.getModelContext();
         super.afterPropertiesSet();
     }
@@ -443,12 +411,12 @@ public abstract class AbstractModelRepository<T extends BaseType, R extends Base
     }
 
     @Override
-    public Long getModelCountByCondition(Long optid, Map<R, Object> conditions) {
+    public Long getModelCountByCondition(Map<R, Object> conditions) {
         return 0L;
     }
 
     @Override
-    public List<Map<String, Object>> getModelGroupByByCondition(Long optid, Map<R, Object> conditions, Set<R> groupByFields, Map<GroupFunc, R> groupFuncMap) {
+    public List<Map<String, Object>> getModelGroupByByCondition(Map<R, Object> conditions, Set<R> groupByFields, Map<GroupFunc, R> groupFuncMap) {
         return Lists.newArrayList();
     }
 

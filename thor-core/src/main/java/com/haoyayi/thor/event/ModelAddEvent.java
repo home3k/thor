@@ -30,10 +30,9 @@ public class ModelAddEvent<T extends BaseType> extends AbstractModelEvent {
         super(source);
     }
 
-    public ModelAddEvent(Long optid, Map<Long, T> newModels,
+    public ModelAddEvent(Map<Long, T> newModels,
                          String modelType) {
-        super(optid);
-        this.optid = optid;
+        super(newModels);
         this.newModels = newModels;
         this.modelType = modelType;
     }

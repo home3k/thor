@@ -19,25 +19,22 @@ import java.util.Map;
 public interface BizCommandProcessor<T extends BaseType, V extends BaseTypeField> {
 
     /**
-     * @param optid
      * @param dentists
      * @return
      */
-    Map<Long, CheckResult<T>> add(Long optid, Map<Long, Map<V, Object>> dentists);
+    Map<Long, CheckResult<T>> add(Map<Long, Map<V, Object>> dentists);
 
     /**
-     * @param optid
      * @param dentists
      * @return
      */
-    Map<Long, CheckResult<T>> mod(Long optid, Map<Long, Map<V, Object>> dentists);
+    Map<Long, CheckResult<T>> mod(Map<Long, Map<V, Object>> dentists);
 
     /**
      *
-     * @param optid
      * @param dentists
      * @return
      */
-    Map<Long, CheckResult<T>> del(Long optid, Map<Long, Map<V, Object>> dentists);
+    Map<Long, CheckResult<T>> del(Map<Long, Map<V, Object>> dentists);
 
 }

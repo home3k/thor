@@ -16,12 +16,12 @@ public class BaseProcessor {
     /**
      * 进行必要的初始化
      *
-     * @param optid
+     * @param modelType
+     * @param action
      */
-    protected void init(Long optid, String modelType, OpType action) {
+    protected void init(String modelType, OpType action) {
 
         // 设置基本的信息
-        BizContextHolder.getInstance().setBizContext(BizContextDict.OPTID, optid);
         BizContextHolder.getInstance().setBizContext(BizContextDict.OP_MODEL, modelType);
         BizContextHolder.getInstance().setBizContext(BizContextDict.OP_ACTION, action);
     }

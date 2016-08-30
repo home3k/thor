@@ -7,8 +7,8 @@ package com.haoyayi.thor.processor;
 
 import com.google.common.base.Optional;
 import com.haoyayi.thor.api.BaseTypeField;
-import com.haoyayi.thor.bizgen.meta.ModelContext;
 import com.haoyayi.thor.common.BizError;
+import com.haoyayi.thor.context.meta.ModelContext;
 import com.haoyayi.thor.impl.base.OpType;
 
 import java.util.Map;

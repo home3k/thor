@@ -21,24 +21,21 @@ public interface ModelFactory<T extends BaseType, V extends BaseTypeField> {
     /**
      * 构建new Model.
      *
-     * @param optid
      * @param context
      * @return
      */
-    Map<String, Map<Long, T>> createModel(Long optid, Map<Long, Map<V, Object>> context);
+    Map<String, Map<Long, T>> createModel(Map<Long, Map<V, Object>> context);
 
     /**
-     * @param optid
      * @param context
      * @return
      */
-    Map<String, Map<Long, ModelPair<T, V>>> modModel(Long optid, Map<Long, Map<V, Object>> context);
+    Map<String, Map<Long, ModelPair<T, V>>> modModel(Map<Long, Map<V, Object>> context);
 
     /**
-     * @param optid
      * @param context
      * @return
      */
-    Map<Long, T> delModel(Long optid, Map<Long, Map<V, Object>> context);
+    Map<Long, T> delModel(Map<Long, Map<V, Object>> context);
 
 }

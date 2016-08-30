@@ -35,9 +35,8 @@ public class ModelSaveEvent<T extends BaseType, C extends BaseTypeField> extends
         super(source);
     }
 
-    public ModelSaveEvent(Long optid, Map<Long, T> oldmodels, Map<Long, T> newmodels, Map<Long, Map<C, Object>> changeMap, String modelType) {
-        super(optid);
-        this.optid = optid;
+    public ModelSaveEvent(Map<Long, T> oldmodels, Map<Long, T> newmodels, Map<Long, Map<C, Object>> changeMap, String modelType) {
+        super(newmodels);
         this.changeMap = changeMap;
         this.oldModel = oldmodels;
         this.newModel = newmodels;

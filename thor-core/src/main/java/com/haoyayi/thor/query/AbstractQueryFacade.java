@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.haoyayi.thor.ModelAware;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -36,16 +37,12 @@ import com.haoyayi.thor.api.ConditionFunc;
 import com.haoyayi.thor.api.ConditionPair;
 import com.haoyayi.thor.api.ErrorCode;
 import com.haoyayi.thor.api.GroupFunc;
-import com.haoyayi.thor.api.ModelType;
 import com.haoyayi.thor.api.Option;
 import com.haoyayi.thor.api.OptionOrderby;
 import com.haoyayi.thor.biz.BaseProcessor;
-import com.haoyayi.thor.bizgen.meta.FieldContext;
-import com.haoyayi.thor.bizgen.meta.ModelContext;
 import com.haoyayi.thor.common.BizError;
 import com.haoyayi.thor.common.BizUtils;
 import com.haoyayi.thor.common.CheckResult;
-import com.haoyayi.thor.constants.ModelConstants;
 import com.haoyayi.thor.context.InvokeContextDict;
 import com.haoyayi.thor.context.InvokeContextHolder;
 import com.haoyayi.thor.impl.base.OpType;
@@ -59,7 +56,7 @@ import com.haoyayi.thor.validate.ConditionValidator;
  *
  * @author home3k (sunkai@51haoyayi.com)
  */
-public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseTypeField, C extends ConditionField> extends BaseProcessor implements QueryFacade<T, V, C>, InitializingBean {
+public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseTypeField, C extends ConditionField> extends BaseProcessor implements QueryFacade<T, V, C>, InitializingBean, ModelAware {
 
     private static Logger LOG = LoggerFactory.getLogger(AbstractQueryFacade.class);
 
@@ -69,8 +66,6 @@ public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseType
     private ColumnProcessor<V> columnProcessor;
 
     Map<V, Set<V>> field4OtherFields = new HashMap<V, Set<V>>();
-
-    protected abstract ModelType getModelType();
 
     protected Map<Long, T> renderModel(Map<Long, T> models) {
         return models;

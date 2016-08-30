@@ -43,11 +43,10 @@ public class BizUtils<T, V> {
      * 合并后返回结果
      *
      * @param <V>
-     * @param optid
      * @param models
      * @return Map<Long,CheckResult<V>>
      */
-    public static <V> Map<Long, CheckResult<V>> returnModels(Long optid, Map<Long, V> models) {
+    public static <V> Map<Long, CheckResult<V>> returnModels(Map<Long, V> models) {
         Map<Long, CheckResult<V>> result = new LinkedHashMap<Long, CheckResult<V>>();
 
         // 正常结果

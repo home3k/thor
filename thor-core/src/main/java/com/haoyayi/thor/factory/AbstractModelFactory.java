@@ -9,18 +9,16 @@ import com.google.common.collect.Maps;
 import com.haoyayi.thor.ModelAware;
 import com.haoyayi.thor.api.BaseType;
 import com.haoyayi.thor.api.BaseTypeField;
-import com.haoyayi.thor.bizgen.manager.ContextManager;
-import com.haoyayi.thor.bizgen.meta.FieldContext;
-import com.haoyayi.thor.bizgen.meta.ModelContext;
 import com.haoyayi.thor.context.BizContextDict;
 import com.haoyayi.thor.context.BizContextHolder;
+import com.haoyayi.thor.context.ContextManager;
+import com.haoyayi.thor.context.meta.FieldContext;
+import com.haoyayi.thor.context.meta.ModelContext;
 import com.haoyayi.thor.impl.base.OpType;
 import com.haoyayi.thor.model.ModelPair;
 import com.haoyayi.thor.processor.ColumnProcessor;
 import com.haoyayi.thor.processor.ProcessorContext;
 import com.haoyayi.thor.repository.ModelRepository;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +62,7 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        columnProcessor = processorContext.getConverter(getModelType().name());
+        columnProcessor = processorContext.getConverter(getModelType());
         ModelContext modelContext = columnProcessor.getModelContext();
         for (V field : columnProcessor.getFields()) {
             Set<V> otherFields = new HashSet<V>();
@@ -136,12 +134,11 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
     }
 
     /**
-     * @param optid
      * @param context
      * @return
      */
     @Override
-    public Map<String, Map<Long, T>> createModel(Long optid, Map<Long, Map<V, Object>> context) {
+    public Map<String, Map<Long, T>> createModel(Map<Long, Map<V, Object>> context) {
         Map<String, Map<Long, T>> model2result = new LinkedHashMap<String, Map<Long, T>>();
         Map<Long, T> result = new LinkedHashMap<Long, T>();
         // 生成物料id
@@ -150,11 +147,11 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
         // 这里没有做一些before add之类的预处理动作。
         for (Long index : context.keySet()) {
             Map<V, Object> contextField = context.get(index);
-            T newModel = convertAddModel(optid, contextField, modelIds.get(index));
+            T newModel = convertAddModel(contextField, modelIds.get(index));
             newModel.setId(modelIds.get(index));
             result.put(index, newModel);
         }
-        model2result.put(getModelType().name(), result);
+        model2result.put(getModelType(), result);
         // 如果没有 submodel 直接返回。
         if (!columnProcessor.containsSubModel() && !columnProcessor.containsRefMappingModel()) {
             return model2result;
@@ -163,14 +160,14 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
         Map<String, Map<OpType, Map<Long, Map<V, Object>>>> subModels = columnProcessor.getSubModels(context, OpType.ADD);
         for (String model : subModels.keySet()) {
             Map<OpType, Map<Long, Map<V, Object>>> subModelContext = subModels.get(model);
-            Map<String, Map<Long, T>> prodSubModels = processorContext.getFactory(model).createModel(optid, subModelContext.get(OpType.ADD));
+            Map<String, Map<Long, T>> prodSubModels = processorContext.getFactory(model).createModel(subModelContext.get(OpType.ADD));
             model2result.putAll(prodSubModels);
         }
         Map<String, Map<OpType, Map<Long, Map<V, Object>>>> refMappingModels = columnProcessor.getRefMappingModels(context, OpType.ADD);
         for (String model : refMappingModels.keySet()) {
             Map<OpType, Map<Long, Map<V, Object>>> refMappingModelContext = refMappingModels.get(model);
             if (MapUtils.isNotEmpty(refMappingModelContext.get(OpType.ADD))) {
-            	Map<String, Map<Long, T>> prodSubModels = processorContext.getFactory(columnProcessor.getSubModelTypeFromSubModelName(model)).createModel(optid, refMappingModelContext.get(OpType.ADD));
+            	Map<String, Map<Long, T>> prodSubModels = processorContext.getFactory(columnProcessor.getSubModelTypeFromSubModelName(model)).createModel(refMappingModelContext.get(OpType.ADD));
             	Map<String, Map<Long, T>> models = Maps.newHashMap();
             	for (String key : prodSubModels.keySet()) {
             		models.put(columnProcessor.getSubModelNameFromSubModelType(key), prodSubModels.get(key));
@@ -183,21 +180,20 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
 
 
     /**
-     * @param optid
      * @param context
      * @return
      */
     @Override
-    public Map<String, Map<Long, ModelPair<T, V>>> modModel(Long optid, Map<Long, Map<V, Object>> context) {
+    public Map<String, Map<Long, ModelPair<T, V>>> modModel(Map<Long, Map<V, Object>> context) {
         Map<String, Map<Long, ModelPair<T, V>>> model2result = new LinkedHashMap<String, Map<Long, ModelPair<T, V>>>();
         // 处理拆分后的model，对于mod操作，可能mod，可能修改。
         if (columnProcessor.containsSubModel()) {
             Map<String, Map<OpType, Map<Long, Map<V, Object>>>> subModels = columnProcessor.getSubModels(context, OpType.MOD);
             for (String model : subModels.keySet()) {
                 Map<OpType, Map<Long, Map<V, Object>>> subModelContext = subModels.get(model);
-                Map<String, Map<Long, ModelPair<T, V>>> modSubModels = processorContext.getFactory(model).modModel(optid, subModelContext.get(OpType.MOD));
+                Map<String, Map<Long, ModelPair<T, V>>> modSubModels = processorContext.getFactory(model).modModel(subModelContext.get(OpType.MOD));
                 model2result.putAll(modSubModels);
-                Map<String, Map<Long, T>> addSubModels = processorContext.getFactory(model).createModel(optid, subModelContext.get(OpType.ADD));
+                Map<String, Map<Long, T>> addSubModels = processorContext.getFactory(model).createModel(subModelContext.get(OpType.ADD));
                 model2result.putAll(convert(addSubModels));
             }
         }
@@ -205,7 +201,7 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
         for (String model : refMappingModels.keySet()) {
             Map<OpType, Map<Long, Map<V, Object>>> refMappingModelContext = refMappingModels.get(model);
             if (refMappingModelContext.containsKey(OpType.MOD)) {
-            	Map<String, Map<Long, ModelPair<T, V>>> prodSubModels4mod = processorContext.getFactory(columnProcessor.getSubModelTypeFromSubModelName(model)).modModel(optid, refMappingModelContext.get(OpType.MOD));
+            	Map<String, Map<Long, ModelPair<T, V>>> prodSubModels4mod = processorContext.getFactory(columnProcessor.getSubModelTypeFromSubModelName(model)).modModel(refMappingModelContext.get(OpType.MOD));
             	Map<String, Map<Long, ModelPair<T, V>>> models = Maps.newHashMap();
             	for (String key : prodSubModels4mod.keySet()) {
             		models.put(columnProcessor.getSubModelNameFromSubModelType(key), prodSubModels4mod.get(key));
@@ -213,7 +209,7 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
             	model2result.putAll(models);
             }
             if (refMappingModelContext.containsKey(OpType.ADD)) {
-            	Map<String, Map<Long, T>> prodSubModels4add = processorContext.getFactory(columnProcessor.getSubModelTypeFromSubModelName(model)).createModel(optid, refMappingModelContext.get(OpType.ADD));
+            	Map<String, Map<Long, T>> prodSubModels4add = processorContext.getFactory(columnProcessor.getSubModelTypeFromSubModelName(model)).createModel(refMappingModelContext.get(OpType.ADD));
             	Map<String, Map<Long, T>> models = Maps.newHashMap();
             	for (String key : prodSubModels4add.keySet()) {
             		models.put(columnProcessor.getSubModelNameFromSubModelType(key), prodSubModels4add.get(key));
@@ -223,7 +219,7 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
         }
         Map<Long, T> oldModels = buildOldModel(context);
         refreshOldModels(oldModels, model2result);
-        model2result.put(getModelType(), createModel4Mod(optid, oldModels, context));
+        model2result.put(getModelType(), createModel4Mod(oldModels, context));
         return model2result;
     }
 
@@ -265,7 +261,7 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
     }
 
     @Override
-    public Map<Long, T> delModel(Long optid, Map<Long, Map<V, Object>> context) {
+    public Map<Long, T> delModel(Map<Long, Map<V, Object>> context) {
         Set<V> fields = new HashSet<V>();
         // 根据response进行渲染
         fields = renderResponse(fields);
@@ -287,12 +283,11 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
     /**
      * 构建Mod操作的models
      *
-     * @param optid
      * @param oldModels
      * @param contexts
      * @return
      */
-    protected Map<Long, ModelPair<T, V>> createModel4Mod(Long optid, Map<Long, T> oldModels, Map<Long, Map<V, Object>> contexts) {
+    protected Map<Long, ModelPair<T, V>> createModel4Mod(Map<Long, T> oldModels, Map<Long, Map<V, Object>> contexts) {
 
         Map<Long, ModelPair<T, V>> result = new HashMap<Long, ModelPair<T, V>>();
         // 这里没有做一些before mod之类的预处理动作。
@@ -301,7 +296,7 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
             T oldModel = oldModels.get(id);
             Map<V, Object> context = contexts.get(id);
             // 获得modmodel
-            T newModel = convertModModel(optid, oldModel, context);
+            T newModel = convertModModel(oldModel, context);
             newModel.setId(id);
             oldModel.setId(id);
             oldModel.setRefModelPk(newModel.getRefModelPk());
@@ -313,12 +308,11 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
     /**
      * 基于old model及context信息，build出new model
      *
-     * @param optid
      * @param oldModel
      * @param context
      * @return
      */
-    protected abstract T convertModModel(Long optid, T oldModel, Map<V, Object> context);
+    protected abstract T convertModModel(T oldModel, Map<V, Object> context);
 
     /**
      * 基于context信息，及id，build出new model
@@ -327,7 +321,7 @@ public abstract class AbstractModelFactory<T extends BaseType, V extends BaseTyp
      * @param id
      * @return
      */
-    protected abstract T convertAddModel(Long optid, Map<V, Object> context, Long id);
+    protected abstract T convertAddModel(Map<V, Object> context, Long id);
 
 
     /**

@@ -39,17 +39,7 @@ public abstract class AbstractAPI {
      * @param params
      * @return true 验证成功，false 验证失败
      */
-    protected boolean checkParams(Long optid, CommonResponse response, CommonRequest... params) {
-
-        // need ucenter?  & permission verification
-        if (optid == null || optid <= 0) {
-            Error error = new Error();
-            error.setErrorCode(ErrorCode.ERROR_PARAM_COMMON_ERROR);
-            error.setErrorMessage("API optid parameter is error");
-            response.setError(error);
-            response.setStatus(CommonResponse.API_STATUS_FAILED);
-            return false;
-        }
+    protected boolean checkParams(CommonResponse response, CommonRequest... params) {
 
         // parameters is null
         if (params == null) {

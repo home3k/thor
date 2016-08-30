@@ -56,8 +56,24 @@
 
         <dependency>
             <groupId>com.haoyayi.thor</groupId>
-            <artifactId>thor-generate</artifactId>
+            <artifactId>thor-context</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
 
     </dependencies>
 

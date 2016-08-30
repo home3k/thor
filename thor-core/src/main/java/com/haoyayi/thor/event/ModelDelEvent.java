@@ -24,9 +24,8 @@ public class ModelDelEvent<T extends BaseType> extends AbstractModelEvent {
         super(source);
     }
 
-    public ModelDelEvent(Long optid, Map<Long, T> id2model, String modelType) {
-        super(optid);
-        this.optid = optid;
+    public ModelDelEvent(Map<Long, T> id2model, String modelType) {
+        super(id2model);
         this.id2model = id2model;
         this.modelType = modelType;
     }

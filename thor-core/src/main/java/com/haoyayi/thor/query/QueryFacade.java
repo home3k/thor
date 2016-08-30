@@ -19,11 +19,11 @@ public interface QueryFacade<T extends BaseType, V extends BaseTypeField, C exte
 
     Set<V> addOtherFields(Set<V> fields, String model, Set<String> otherModels, Map<String, String> subModelField4model);
 
-    Map<Long, CheckResult<T>> query(Long optid, ConditionPair<C>[] conditions, Option[] options, Set<String> fields);
+    Map<Long, CheckResult<T>> query(ConditionPair<C>[] conditions, Option[] options, Set<String> fields);
 
-    CheckResult<Long> query(Long optid, ConditionPair<C>[] conditions);
+    CheckResult<Long> query(ConditionPair<C>[] conditions);
 
-    CheckResult<List<Map<String, Object>>> query(Long optid, ConditionPair<C>[] conditions, Set<V> groupByFields, Map<GroupFunc, V> groupFuncMap);
+    CheckResult<List<Map<String, Object>>> query(ConditionPair<C>[] conditions, Set<V> groupByFields, Map<GroupFunc, V> groupFuncMap);
 
 }
 

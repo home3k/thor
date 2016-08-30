@@ -16,12 +16,12 @@ import java.util.Set;
  */
 public interface ModelConditionQueryRepository<T extends BaseType, V extends BaseTypeField, C extends ConditionField> {
 
-    Map<Long, Map<V, Object>> getModelByCondition(Long optid, List<ConditionPair<C>> conditions, Option[] options, Set<V> fields);
+    Map<Long, Map<V, Object>> getModelByCondition(List<ConditionPair<C>> conditions, Option[] options, Set<V> fields);
 
-    Map<Long, T> getModelByCondition(Long optid, Map<V, Object> conditions, Set<V> fields);
+    Map<Long, T> getModelByCondition(Map<V, Object> conditions, Set<V> fields);
 
-    Long getModelCountByCondition(Long optid, Map<V, Object> conditions);
+    Long getModelCountByCondition(Map<V, Object> conditions);
 
-    List<Map<String, Object>> getModelGroupByByCondition(Long optid, Map<V, Object> conditions, Set<V> groupByFields, Map<GroupFunc, V> groupFuncMap);
+    List<Map<String, Object>> getModelGroupByByCondition(Map<V, Object> conditions, Set<V> groupByFields, Map<GroupFunc, V> groupFuncMap);
 
 }

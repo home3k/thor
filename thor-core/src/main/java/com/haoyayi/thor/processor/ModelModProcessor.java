@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.haoyayi.thor.context.meta.FieldContext;
+import com.haoyayi.thor.context.meta.ModelContext;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -22,8 +24,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.haoyayi.thor.api.BaseType;
 import com.haoyayi.thor.api.BaseTypeField;
-import com.haoyayi.thor.bizgen.meta.FieldContext;
-import com.haoyayi.thor.bizgen.meta.ModelContext;
 import com.haoyayi.thor.impl.base.OpType;
 import com.haoyayi.thor.model.ModelPair;
 
@@ -40,8 +40,8 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-    public Map<Long, T> process(final Long optid, final String modelType, Map<Long, Map<V, Object>> context) {
-        final Map<String, Map<Long, ModelPair<T, V>>> models = getModelModelFactory(modelType).modModel(optid, context);
+    public Map<Long, T> process(final String modelType, Map<Long, Map<V, Object>> context) {
+        final Map<String, Map<Long, ModelPair<T, V>>> models = getModelModelFactory(modelType).modModel(context);
         final ColumnProcessor columnProcessor = getModelColumnProcessor(modelType);
         
         // 事务处理
@@ -69,8 +69,8 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                                 		conditions.put(subColumnProcessor.convert(refField), mainModels.keySet());
                                 		Set<BaseTypeField> fields = new HashSet<BaseTypeField>();
                                 		fields.add(subColumnProcessor.getPkField());
-                                		Map<Long, Object> originSubModels = getModelRepository(model).getModelByCondition(optid, conditions, fields);
-                                		getModelRepository(model).delModelById(optid, originSubModels);
+                                		Map<Long, Object> originSubModels = getModelRepository(model).getModelByCondition(conditions, fields);
+                                		getModelRepository(model).delModelById(originSubModels);
                                 		break;
                         			}
                         		}
@@ -81,7 +81,7 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                         		if (action == OpType.ADD || columnProcessor.isAnytimeNewField(model)) {
                         			subMultiProdMod.put(model, fetchAddModels(models.get(model)));
 	                       		} else {
-	                       			getModelRepository(model).saveModel(optid, models.get(model)); 
+	                       			getModelRepository(model).saveModel(models.get(model));
 	                       		}
                         	} else if (columnProcessor.isMappingSubModelField(model)) {
                         		// 多对多映射
@@ -90,14 +90,14 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                         		}
                         		if (action == OpType.MOD) {
                         			mappingSubModels.put(model, fetchAddModels(models.get(model)));
-                        			getModelRepository(columnProcessor.getSubModelTypeFromSubModelName(model)).saveModel(optid, models.get(model)); 
+                        			getModelRepository(columnProcessor.getSubModelTypeFromSubModelName(model)).saveModel(models.get(model));
                         		}
                         	} else {
                         		Map<Long, T> subModels = null;
 	                       		if (action == OpType.MOD) {
-	                       			subModels = getModelRepository(model).saveModel(optid, models.get(model));
+	                       			subModels = getModelRepository(model).saveModel(models.get(model));
 	                       		} else {
-	                       			subModels = getModelRepository(model).addModel(optid, fetchAddModels(models.get(model)));
+	                       			subModels = getModelRepository(model).addModel(fetchAddModels(models.get(model)));
 	                       		}
 	                       		subProdMod.put(model, subModels);
                         	}
@@ -119,7 +119,7 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                         mainModels.get(id).setNewModel(newModels.get(id));
                     }
 
-                    Map<Long, T> saveResults = getModelRepository(modelType).saveModel(optid, mainModels);
+                    Map<Long, T> saveResults = getModelRepository(modelType).saveModel(mainModels);
                   
                     if (subProdMod.size() > 0) {
                     	setIdForSubModel(subProdMod, saveResults);
@@ -129,7 +129,7 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                         mergeMainModel(modelType, subMultiProdMod, newModels, OpType.MOD);
                         
                         for (String subModel : subMultiProdMod.keySet()) {
-                        		Map<Long, T> index2model = getModelRepository(subModel).addModel(optid, subMultiProdMod.get(subModel));
+                        		Map<Long, T> index2model = getModelRepository(subModel).addModel(subMultiProdMod.get(subModel));
                         		Map<String, Map<Long, T>> subModels = new HashMap<String, Map<Long, T>>();
                         		subModels.put(subModel, index2model);
                         		updateSubModelPk(modelType, subModels, newModels);
@@ -141,7 +141,7 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                     if (mappingSubModels.size() > 0) {
                     	for (String subModel : mappingSubModels.keySet()) {
                     		String subModelType = columnProcessor.getSubModelTypeFromSubModelName(subModel);
-                            Map<Long, T> subModels = getModelRepository(subModelType).addModel(optid, mappingSubModels.get(subModel));
+                            Map<Long, T> subModels = getModelRepository(subModelType).addModel(mappingSubModels.get(subModel));
                             // 获得映射表对象
                             FieldContext subFieldContext = getModelColumnProcessor(modelType).getModelContext().getFieldContext(subModel);
                             String mappingModel = subFieldContext.getRefMappingModel();
@@ -166,17 +166,17 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                             	// 清空原有映射
                             	Map<V, Object> conditions = new HashMap<V, Object>();
                             	conditions.put(mainModelIdField, mainModelIds);
-                            	Map<Long, Object> origin = getModelRepository(mappingModel).getModelByCondition(optid, conditions, Sets.newHashSet(mappingColumnProcessor.getPkField()));
+                            	Map<Long, Object> origin = getModelRepository(mappingModel).getModelByCondition(conditions, Sets.newHashSet(mappingColumnProcessor.getPkField()));
                             	if (MapUtils.isNotEmpty(origin)) {
                             		Map<Long,Map<V,Object>> delContext = Maps.newHashMap();
                             		for (Long key : origin.keySet()) {
                             			delContext.put(key, new HashMap());
                             		}
-                            		modelDelProcessor.process(optid, mappingModel, delContext);
-//                            		getModelRepository(mappingModel).delModelById(optid, origin);
+                            		modelDelProcessor.process(mappingModel, delContext);
+//                            		getModelRepository(mappingModel).delModelById(origin);
                             	}
                             }
-                            modelAddProcessor.process(optid, mappingModel, mappingContexts);
+                            modelAddProcessor.process(mappingModel, mappingContexts);
                         }
                     }
                     // 多对多映射情况下，对于子model直接赋值已存在的id的处理方式
@@ -196,14 +196,14 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                     				// 清空原有映射
                     				Map<V, Object> conditions = new HashMap<V, Object>();
                     				conditions.put(mainModelIdFieldV, model.getId());
-                    				Map<Long, Object> origin = getModelRepository(mappingModel).getModelByCondition(optid, conditions, Sets.newHashSet(mappingColumnProcessor.getPkField()));
+                    				Map<Long, Object> origin = getModelRepository(mappingModel).getModelByCondition(conditions, Sets.newHashSet(mappingColumnProcessor.getPkField()));
                     				if (MapUtils.isNotEmpty(origin)) {
                                 		Map<Long,Map<V,Object>> delContext = Maps.newHashMap();
                                 		for (Long key : origin.keySet()) {
                                 			delContext.put(key, new HashMap());
                                 		}
-                                		modelDelProcessor.process(optid, mappingModel, delContext);
-//                                		getModelRepository(mappingModel).delModelById(optid, origin);
+                                		modelDelProcessor.process(mappingModel, delContext);
+//                                		getModelRepository(mappingModel).delModelById(origin);
                                 	}
                     			}
                                 Long index = 0l;
@@ -213,7 +213,7 @@ public class ModelModProcessor<T extends BaseType, V extends BaseTypeField> exte
                                 	mappingContext.put(subModelIdFieldV, subModelId.longValue());
                                 	mappingContexts.put(index++, mappingContext);
                                 }
-                                modelAddProcessor.process(optid, mappingModel, mappingContexts);
+                                modelAddProcessor.process(mappingModel, mappingContexts);
                     		}
                     	}
                     }

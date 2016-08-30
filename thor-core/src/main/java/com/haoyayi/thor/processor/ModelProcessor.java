@@ -19,5 +19,5 @@ public interface ModelProcessor<T extends BaseType, V extends BaseTypeField> {
      * @param context
      * @return
      */
-    Map<Long, T> process(Long optid, String model,  Map<Long, Map<V, Object>> context);
+    Map<Long, T> process(String model,  Map<Long, Map<V, Object>> context);
 }

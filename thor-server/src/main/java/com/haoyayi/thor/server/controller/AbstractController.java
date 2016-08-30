@@ -13,6 +13,8 @@ import javax.ws.rs.core.HttpHeaders;
  */
 public class AbstractController {
 
+    protected Gen
+
     protected void processHeaders(HttpHeaders headers) {
 
     }

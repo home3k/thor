@@ -64,11 +64,11 @@ public abstract class AbstractModAPIImpl<T extends BaseType, V extends BaseTypeF
      * @param action
      * @return
      */
-    protected CommonResponse command(Long optid, CommonRequest[] requests, OpType action) {
+    protected CommonResponse command(CommonRequest[] requests, OpType action) {
         CommonResponse response = new CommonResponse();
         try {
             // 1. 参数验证
-            if (!checkParams(optid, response, requests)) {
+            if (!checkParams(response, requests)) {
                 return response;
             }
 
@@ -76,7 +76,7 @@ public abstract class AbstractModAPIImpl<T extends BaseType, V extends BaseTypeF
             Map<Long, Map<V, Object>> context = convertRequest(requests, action);
 
             // 3. 进行biz处理
-            Map<Long, CheckResult<T>> result = process(optid, context, action);
+            Map<Long, CheckResult<T>> result = process(context, action);
 
             // 4. 处理返回结果
             return convertResponse(result, action);
@@ -86,14 +86,14 @@ public abstract class AbstractModAPIImpl<T extends BaseType, V extends BaseTypeF
         }
     }
 
-    protected Map<Long, CheckResult<T>> process(Long optid, Map<Long, Map<V, Object>> context, OpType action) {
+    protected Map<Long, CheckResult<T>> process(Map<Long, Map<V, Object>> context, OpType action) {
         switch (action) {
             case MOD:
-                return getBizProcessor().mod(optid, context);
+                return getBizProcessor().mod(context);
             case ADD:
-                return getBizProcessor().add(optid, context);
+                return getBizProcessor().add(context);
             case DEL:
-                return getBizProcessor().del(optid, context);
+                return getBizProcessor().del(context);
             default:
                 throw new BizException("The action type invalid: " + action);
         }

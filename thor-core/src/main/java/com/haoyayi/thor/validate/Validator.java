@@ -18,6 +18,6 @@ import java.util.Map;
  */
 public interface Validator<R extends BaseTypeField> {
 
-    Map<Long, CheckResult<Map<R, Object>>> validate(Long optid, Map<Long, Map<R, Object>> context, OpType action);
+    Map<Long, CheckResult<Map<R, Object>>> validate(Map<Long, Map<R, Object>> context, OpType action);
 
 }

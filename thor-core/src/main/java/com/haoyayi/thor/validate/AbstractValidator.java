@@ -16,11 +16,9 @@ import com.haoyayi.thor.impl.base.OpType;
 import com.haoyayi.thor.processor.ColumnProcessor;
 import com.haoyayi.thor.processor.ProcessorContext;
 import com.haoyayi.thor.utils.ErrorUtils;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,18 +42,18 @@ public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeFi
     }
 
     @Override
-    public Map<Long, CheckResult<Map<R, Object>>> validate(Long optid, Map<Long, Map<R, Object>> context, OpType action) {
+    public Map<Long, CheckResult<Map<R, Object>>> validate(Map<Long, Map<R, Object>> context, OpType action) {
 
         switch (action) {
             case MOD:
-                context = basicCheck(optid, context, action);
-                return validateMod(optid, context);
+                context = basicCheck(context, action);
+                return validateMod(context);
             case ADD:
-                context = basicCheck(optid, context, action);
-                return validateAdd(optid, context);
+                context = basicCheck(context, action);
+                return validateAdd(context);
             case DEL:
-                context = basicCheck(optid, context, action);
-                return validateDel(optid, context);
+                context = basicCheck(context, action);
+                return validateDel(context);
             default:
                 throw new BizException("The operation type is invalid!");
         }
@@ -66,7 +64,7 @@ public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeFi
      *
      * @param context
      */
-    protected Map<Long, Map<R, Object>> basicCheck(Long optid, Map<Long, Map<R, Object>> context, OpType action) {
+    protected Map<Long, Map<R, Object>> basicCheck(Map<Long, Map<R, Object>> context, OpType action) {
         Map<Long, Map<R, Object>> checkResultMap = new LinkedHashMap<Long, Map<R, Object>>();
         for (Long id : context.keySet()) {
             Map<R, Object> con = context.get(id);
@@ -90,7 +88,7 @@ public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeFi
                         if (spSubModelContext.size() == 0) {
                             continue;
                         }
-                        Map<Long, CheckResult<Map<R, Object>>> subModelCheckResult = processorContext.getValidator(model).validate(optid, spSubModelContext, subModelAction);
+                        Map<Long, CheckResult<Map<R, Object>>> subModelCheckResult = processorContext.getValidator(model).validate(spSubModelContext, subModelAction);
                         for (CheckResult<Map<R, Object>> scr : subModelCheckResult.values()) {
                             if (scr.isErrorResult()) {
                                 error = scr.getError();
@@ -110,15 +108,15 @@ public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeFi
                         continue;
                     }
                 } else if (columnProcessor.isMappingSubModelField(r.toString())) {
-                	String subModel = columnProcessor.getMapptingSubModelName(r.toString());
-                	Map<OpType, Map<Long, Map<R, Object>>> subModelContextOpTypes = columnProcessor.buildMappingSubModels(null, r.toString(), subModel, value);
-                	BizError error = null;
+                    String subModel = columnProcessor.getMapptingSubModelName(r.toString());
+                    Map<OpType, Map<Long, Map<R, Object>>> subModelContextOpTypes = columnProcessor.buildMappingSubModels(null, r.toString(), subModel, value);
+                    BizError error = null;
                     for (OpType subModelAction : subModelContextOpTypes.keySet()) {
-                    	Map<Long, Map<R, Object>> spSubModelContext = subModelContextOpTypes.get(subModelAction);
+                        Map<Long, Map<R, Object>> spSubModelContext = subModelContextOpTypes.get(subModelAction);
                         if (spSubModelContext.size() == 0) {
                             continue;
                         }
-                        Map<Long, CheckResult<Map<R, Object>>> subModelCheckResult = processorContext.getValidator(subModel).validate(optid, spSubModelContext, subModelAction);
+                        Map<Long, CheckResult<Map<R, Object>>> subModelCheckResult = processorContext.getValidator(subModel).validate(spSubModelContext, subModelAction);
                         for (CheckResult<Map<R, Object>> scr : subModelCheckResult.values()) {
                             if (scr.isErrorResult()) {
                                 error = scr.getError();
@@ -130,10 +128,10 @@ public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeFi
                         ErrorUtils.saveError(error, id);
                         break;
                     } else {
-                    	List<Map<R, Object>> subModelContexts = Lists.newArrayList();
-                    	for (Map<Long, Map<R, Object>> map : subModelContextOpTypes.values()) {
-                    		subModelContexts.addAll(map.values());
-                    	}
+                        List<Map<R, Object>> subModelContexts = Lists.newArrayList();
+                        for (Map<Long, Map<R, Object>> map : subModelContextOpTypes.values()) {
+                            subModelContexts.addAll(map.values());
+                        }
                         con.put(r, subModelContexts.toArray(new Map[0]));
                         if (index == size) {
                             checkResultMap.put(id, con);
@@ -160,12 +158,11 @@ public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeFi
      * 查询条件验证
      * 只进行基本参数验证。 后续可以进行扩充
      *
-     * @param optid
      * @param conditions
      * @return
      */
     @Override
-    public CheckResult<List<ConditionPair<C>>> validate(Long optid, List<ConditionPair<C>> conditions) {
+    public CheckResult<List<ConditionPair<C>>> validate(List<ConditionPair<C>> conditions) {
         if (conditions != null) {
             for (ConditionPair<C> condition : conditions) {
                 if (condition == null || condition.getValue() == null) {
@@ -181,27 +178,24 @@ public abstract class AbstractValidator<T extends BaseType, R extends BaseTypeFi
     /**
      * 修改操作验证
      *
-     * @param optid
      * @param context
      * @return
      */
-    protected abstract Map<Long, CheckResult<Map<R, Object>>> validateMod(Long optid, Map<Long, Map<R, Object>> context);
+    protected abstract Map<Long, CheckResult<Map<R, Object>>> validateMod(Map<Long, Map<R, Object>> context);
 
     /**
      * 添加操作验证
      *
-     * @param optid
      * @param context
      * @return
      */
-    protected abstract Map<Long, CheckResult<Map<R, Object>>> validateAdd(Long optid, Map<Long, Map<R, Object>> context);
+    protected abstract Map<Long, CheckResult<Map<R, Object>>> validateAdd(Map<Long, Map<R, Object>> context);
 
     /**
      * 删除操作验证
      *
-     * @param optid
      * @param context
      * @return
      */
-    protected abstract Map<Long, CheckResult<Map<R, Object>>> validateDel(Long optid, Map<Long, Map<R, Object>> context);
+    protected abstract Map<Long, CheckResult<Map<R, Object>>> validateDel(Map<Long, Map<R, Object>> context);
 }
