@@ -6,7 +6,7 @@
 package com.haoyayi.thor.validate;
 
 import com.haoyayi.thor.api.ModelType;
-import com.haoyayi.thor.api.wrapper.AbstractWrapper;
+import com.haoyayi.thor.api.wrapper.GenericRequestWrapper;
 import com.haoyayi.thor.bizgen.CamelUtils;
 import com.haoyayi.thor.context.InvokeContextDict;
 import com.haoyayi.thor.processor.ProcessorContext;
@@ -37,7 +37,7 @@ public class BaseAuthPolicy {
 
     protected TokenAuthItem getTokenAuthItem(ProceedingJoinPoint pjp) throws Exception {
 
-        AbstractWrapper requestWrapper = (AbstractWrapper) pjp.getArgs()[1];
+        GenericRequestWrapper requestWrapper = (GenericRequestWrapper) pjp.getArgs()[1];
 
         TokenAuthItem tokenAuthItem = new TokenAuthItem();
         tokenAuthItem.setOptid(requestWrapper.getOptid());

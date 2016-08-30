@@ -13,17 +13,20 @@ import java.util.Map;
 /**
  * @author home3k (sunkai@51haoyayi.com)
  */
-public abstract class AbstractWrapper {
+public abstract class GenericRequestWrapper {
 
     /**
      * 接口版本
      */
     protected String version;
 
+    /**
+     * Http header 额外信息，比如授权相关等.
+     */
     protected Map<HeaderExtraDict, Object> headExtra;
 
     /**
-     * 特殊信息
+     * request中的特殊信息
      */
     protected Map<RequestExtraDict, Object> extra;
 
@@ -35,13 +38,13 @@ public abstract class AbstractWrapper {
         this.extra = extra;
     }
 
-	public String getVersion() {
-		return version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public Map<HeaderExtraDict, Object> getHeadExtra() {
         return headExtra;

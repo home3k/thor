@@ -7,7 +7,6 @@ package com.haoyayi.thor.api.wrapper;
 
 import com.haoyayi.thor.api.BaseTypeField;
 import com.haoyayi.thor.api.ModRequest;
-import com.haoyayi.thor.api.wrapper.AbstractWrapper;
 
 import java.io.Serializable;
 
@@ -16,7 +15,7 @@ import java.io.Serializable;
  *
  * @author home3k (sunkai@51haoyayi.com)
  */
-public class ModRequestWrapper<T extends BaseTypeField> extends AbstractWrapper implements Serializable {
+public class ModRequestWrapper<T extends BaseTypeField> extends GenericRequestWrapper implements Serializable {
 
     private ModRequest<T>[] modRequests;
 

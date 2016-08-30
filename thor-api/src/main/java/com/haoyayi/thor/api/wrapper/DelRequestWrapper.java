@@ -15,7 +15,7 @@ import com.haoyayi.thor.api.DelRequest;
  *
  * @author home3k (sunkai@51haoyayi.com)
  */
-public class DelRequestWrapper<T extends BaseTypeField> extends AbstractWrapper implements Serializable {
+public class DelRequestWrapper<T extends BaseTypeField> extends GenericRequestWrapper implements Serializable {
 
     private DelRequest<T>[] delRequests;
 

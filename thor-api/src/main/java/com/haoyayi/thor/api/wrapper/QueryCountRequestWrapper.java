@@ -5,18 +5,15 @@
 
 package com.haoyayi.thor.api.wrapper;
 
-import com.haoyayi.thor.api.BaseTypeField;
 import com.haoyayi.thor.api.ConditionField;
 import com.haoyayi.thor.api.CountRequest;
-import com.haoyayi.thor.api.QueryRequest;
-import com.haoyayi.thor.api.wrapper.AbstractWrapper;
 
 import java.io.Serializable;
 
 /**
  * @author home3k (sunkai@51haoyayi.com)
  */
-public class QueryCountRequestWrapper<V extends ConditionField> extends AbstractWrapper implements Serializable {
+public class QueryCountRequestWrapper<V extends ConditionField> extends GenericRequestWrapper implements Serializable {
 
     private CountRequest<V> countRequest;
 

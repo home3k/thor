@@ -14,7 +14,7 @@ import java.io.Serializable;
 /**
  * @author home3k (sunkai@51haoyayi.com)
  */
-public class QueryGroupByRequestWrapper<V extends ConditionField, F extends BaseTypeField> extends AbstractWrapper implements Serializable {
+public class QueryGroupByRequestWrapper<V extends ConditionField, F extends BaseTypeField> extends GenericRequestWrapper implements Serializable {
 
     private QueryGroupByRequest<V, F> groupByRequest;
 
