@@ -24,15 +24,15 @@ public class CamelUtils {
 
 
     public static void main(String args[]) {
-        System.out.println(getCamelStr("pay_type1"));
-        System.out.println(getUnCamelStr("payType1"));
+        System.out.println(getCamelCaseStr("pay_type1"));
+        System.out.println(getUnderScoreCaseStr("payType1"));
     }
 
     /**
      * @param field
      * @return
      */
-    public static String getUnCamelStr(String field) {
+    public static String getUnderScoreCaseStr(String field) {
         StringBuilder stringBuilder = new StringBuilder("");
         for (int i = 0; i < field.length(); i++) {
             char ch = field.charAt(i);
@@ -52,7 +52,7 @@ public class CamelUtils {
      * @param field
      * @return
      */
-    public static String getCamelStr(String field) {
+    public static String getCamelCaseStr(String field) {
 
         StringBuilder stringBuilder = new StringBuilder("");
         boolean needUpper = false;

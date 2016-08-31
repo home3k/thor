@@ -18,6 +18,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.haoyayi.thor.ModelAware;
+import com.haoyayi.thor.context.meta.FieldContext;
+import com.haoyayi.thor.context.meta.ModelContext;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -263,7 +265,7 @@ public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseType
                 refreshField(model2fields, model, mField);
                 otherModels.add(model);
             } else {
-                refreshField(model2fields, getModelType().name(), field);
+                refreshField(model2fields, getModelType(), field);
             }
         }
     }
@@ -300,7 +302,7 @@ public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseType
                 refreshCondition(model2condtions, model, mField, condition);
                 otherModels.add(model);
             } else {
-                refreshCondition(model2condtions, getModelType().name(), field, condition);
+                refreshCondition(model2condtions, getModelType(), field, condition);
             }
         }
     }
@@ -349,12 +351,12 @@ public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseType
 
     }
     
-    protected Map<Long, Map<V, Object>> query(Long optid, Set<V> fields, List<ConditionPair<C>> conditions, Option[] options) {
+    protected Map<Long, Map<V, Object>> query(Set<V> fields, List<ConditionPair<C>> conditions, Option[] options) {
         ModelConditionQueryRepository<T, V, C> conditionQueryRepository = processorContext.getQueryRepository(columnProcessor.getModelContext().getName());
         return conditionQueryRepository.getModelByCondition(optid, conditions, options, fields);
     }
     
-    protected Long queryCnt(Long optid, String model, List<ConditionPair<C>> conditions) {
+    protected Long queryCnt(String model, List<ConditionPair<C>> conditions) {
     	 ModelConditionQueryRepository<T, V, C> conditionQueryRepository = processorContext.getQueryRepository(getModelType().name());
     	 Map<V, Object> field4Condition = new HashMap<V, Object>();
     	 for (ConditionPair<C> conditionPair : conditions) {
@@ -364,28 +366,28 @@ public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseType
          return count;
     }
     
-    protected List<Map<String, Object>> queryGroup(Long optid, String model, List<ConditionPair<C>> conditions, Set<V> groupFields, Map<GroupFunc, V> groupFuncs) {
+    protected List<Map<String, Object>> queryGroup(String model, List<ConditionPair<C>> conditions, Set<V> groupFields, Map<GroupFunc, V> groupFuncs) {
     	ModelConditionQueryRepository<T, V, C> conditionQueryRepository = processorContext.getQueryRepository(getModelType().name());
     	Map<V, Object> field4Condition = new HashMap<V, Object>();
 	   	for (ConditionPair<C> conditionPair : conditions) {
 	   		field4Condition.put(columnProcessor.convert(conditionPair.getField().toString()), conditionPair);
 	   	}
-    	return conditionQueryRepository.getModelGroupByByCondition(optid, field4Condition, groupFields, groupFuncs);
+    	return conditionQueryRepository.getModelGroupByByCondition(field4Condition, groupFields, groupFuncs);
     }
     
     protected ColumnProcessor<V> getColumnProcessor() {
     	return columnProcessor;
     }
     
-    protected Optional<Map<Long, Map<V, Object>>> build(Long optid, String model, Set<String> otherModels, Set<V> fields, List<ConditionPair<C>> conditions, List<Option> options, Map<Long, T> mainModels, Map<String, String> subModelField4model) throws Exception {
+    protected Optional<Map<Long, Map<V, Object>>> build(String model, Set<String> otherModels, Set<V> fields, List<ConditionPair<C>> conditions, List<Option> options, Map<Long, T> mainModels, Map<String, String> subModelField4model) throws Exception {
 
         ConditionValidator<C> validator = processorContext.getConditionValidator(model);
         QueryFacade<T, V, C> queryFacade = processorContext.getQuery(model);
         ModelConditionQueryRepository<T, V, C> conditionQueryRepository = processorContext.getQueryRepository(model);
 
-        if (model.equals(getModelType().name())) {
+        if (model.equals(getModelType())) {
             // 验证
-            CheckResult<List<ConditionPair<C>>> validateResult = validator.validate(optid, conditions);
+            CheckResult<List<ConditionPair<C>>> validateResult = validator.validate(conditions);
 
             if (validateResult.isErrorResult()) {
                 return Optional.fromNullable(null);
@@ -426,7 +428,7 @@ public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseType
      * @return
      */
     @Override
-    public CheckResult<List<Map<String, Object>>> query(Long optid, ConditionPair<C>[] conditions, Set<V> groupByFields, Map<GroupFunc, V> groupFuncMap) {
+    public CheckResult<List<Map<String, Object>>> query(ConditionPair<C>[] conditions, Set<V> groupByFields, Map<GroupFunc, V> groupFuncMap) {
         try {
             // 1. 初始化
             init(optid, getModelType(), OpType.QUERY);
@@ -472,7 +474,7 @@ public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseType
      * @return
      */
     @Override
-    public CheckResult<Long> query(Long optid, ConditionPair<C>[] conditions) {
+    public CheckResult<Long> query(ConditionPair<C>[] conditions) {
         try {
             // 1. 初始化
             init(optid, getModelType(), OpType.QUERY);
@@ -491,17 +493,17 @@ public abstract class AbstractQueryFacade<T extends BaseType, V extends BaseType
     }
 
     @Override
-    public Map<Long, CheckResult<T>> query(Long optid, ConditionPair<C>[] conditions, Option[] options, Set<String> fields) {
+    public Map<Long, CheckResult<T>> query(ConditionPair<C>[] conditions, Option[] options, Set<String> fields) {
 
         try {
 
             // 1. 初始化
-            init(optid, getModelType(), OpType.QUERY);
-            ModelTree modelTree = new ModelTree().rootOf(getModelType().name(), optid, processorContext);
+            init(getModelType(), OpType.QUERY);
+            ModelTree modelTree = new ModelTree().rootOf(getModelType().name(), processorContext);
             addOtherFields(fields);
             modelTree.with(fields, (ConditionPair<ConditionField>[]) conditions, options);
             Map<Long, T> queryResult = modelTree.query();
-            return BizUtils.returnModels(optid, queryResult);
+            return BizUtils.returnModels(queryResult);
             
 
         } catch (Exception e) {

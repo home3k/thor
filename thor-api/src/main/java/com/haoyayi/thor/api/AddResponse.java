@@ -5,6 +5,7 @@
 
 package com.haoyayi.thor.api;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,17 +19,17 @@ public class AddResponse<T extends BaseType> extends CommonResponse {
     /**
      * 结果数据，按照数组进行返回
      */
-    private Map<Integer, T> data;
+    private List<T> data;
     /**
      * 错误信息
      */
     private Map<Integer, Map<String, com.haoyayi.thor.api.Error>> errorInfo;
 
-    public Map<Integer, T> getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public void setData(Map<Integer, T> data) {
+    public void setData(List<T> data) {
         this.data = data;
     }
 

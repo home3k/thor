@@ -24,8 +24,8 @@ public class ModelGroupTree extends ModelTree {
 	private Map<GroupFunc, BaseTypeField> groupFuncs = Maps.newHashMap();
 	private List<Map<String, Object>> groupResults = Lists.newArrayList();
 	
-	public ModelGroupTree rootOf(String model, Long optid, ProcessorContext processorContext) {
-		super.rootOf(model, optid, processorContext); 
+	public ModelGroupTree rootOf(String model, ProcessorContext processorContext) {
+		super.rootOf(model, processorContext);
 		return this;
 	}
 	
@@ -83,12 +83,12 @@ public class ModelGroupTree extends ModelTree {
 			}
 		}
 		if (isRoot) {
-			groupResults = facade.queryGroup(optid, name, noSubConditions, groupFields, groupFuncs);
+			groupResults = facade.queryGroup(name, noSubConditions, groupFields, groupFuncs);
 			return null;
 		}
 		if (CollectionUtils.isNotEmpty(noSubConditions)) {
 			// 只查询主键id
-			Map<Long,Map<BaseTypeField,Object>> queryResult = facade.query(optid, Sets.newHashSet(cp.getPkField()), noSubConditions, new Option[0]);
+			Map<Long,Map<BaseTypeField,Object>> queryResult = facade.query(Sets.newHashSet(cp.getPkField()), noSubConditions, new Option[0]);
 			this.queryIds = queryResult.keySet();
 			return Optional.of(queryIds);
 		} else {

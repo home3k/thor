@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.haoyayi.thor.context.meta.FieldContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,6 @@ import com.haoyayi.thor.api.ConditionPair;
 import com.haoyayi.thor.api.Option;
 import com.haoyayi.thor.api.OptionLimit;
 import com.haoyayi.thor.api.OptionOrderby;
-import com.haoyayi.thor.bizgen.meta.FieldContext;
 import com.haoyayi.thor.common.CheckResult;
 import com.haoyayi.thor.constants.ModelConstants;
 import com.haoyayi.thor.processor.ColumnProcessor;
@@ -54,7 +54,7 @@ public class ModelTree {
 	protected ColumnProcessor<BaseTypeField> cp;
 	protected AbstractQueryFacade<?, BaseTypeField, ConditionField> facade; 
 	
-	public ModelTree rootOf(String model, Long optid, ProcessorContext processorContext) {
+	public ModelTree rootOf(String model, ProcessorContext processorContext) {
 		if (processorContext != null) {
 			ModelTree.processorContext = processorContext;
 		}
@@ -135,14 +135,14 @@ public class ModelTree {
 					FieldContext oneToManyField = getParent().getCp().getModelContext().getFieldContext(name);
 					conditionField = cp.convert(oneToManyField.getRefModelField4ModelField().keySet().iterator().next());
 				}
-				Map<Long,Map<BaseTypeField,Object>> queryResult = facade.query(optid, Sets.newHashSet(conditionField), noSubConditions, options);
+				Map<Long,Map<BaseTypeField,Object>> queryResult = facade.query(Sets.newHashSet(conditionField), noSubConditions, options);
 				Set<Long> queryIds = Sets.newHashSet();
 				for (Map<BaseTypeField, Object> map : queryResult.values()) {
 					queryIds.add((Long) map.get(conditionField));
 				}
 				this.queryIds = queryIds;
 			} else {
-				Map<Long,Map<BaseTypeField,Object>> queryResult = facade.query(optid, Sets.newHashSet(cp.getPkField()), noSubConditions, options);
+				Map<Long,Map<BaseTypeField,Object>> queryResult = facade.query(Sets.newHashSet(cp.getPkField()), noSubConditions, options);
 				this.queryIds = queryResult.keySet();
 			}
 			// 只查询主键id
@@ -183,7 +183,7 @@ public class ModelTree {
 			conditions.add(IdConditionPair);
 			fields.add(cp.getPkField());
 		}
-		this.queryResult = facade.query(optid, fields, conditions, orderbyOptions);
+		this.queryResult = facade.query(fields, conditions, orderbyOptions);
 		if (MapUtils.isEmpty(this.queryResult)) {
 			return;
 		}
@@ -295,7 +295,7 @@ public class ModelTree {
             } else {
                 this.conditions.add(condition);
                 ConditionValidator<ConditionField> validator = processorContext.getConditionValidator(cp.getModelContext().getName());
-                CheckResult<List<ConditionPair<ConditionField>>> validateResult = validator.validate(optid, this.conditions);
+                CheckResult<List<ConditionPair<ConditionField>>> validateResult = validator.validate(this.conditions);
                 if (validateResult.isErrorResult()) {
                 	hasError.set(true);
                 }
