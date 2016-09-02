@@ -61,7 +61,7 @@ public class ConditionPair<T extends ConditionField> implements Cloneable {
 		try {
 			return (ConditionPair<ConditionField>) super.clone();
 		} catch (Exception e) {
-			throw new RuntimeException("ConditionPair clone error.", e);
+			throw new IllegalStateException("ConditionPair clone error.", e);
 		}
 	}
 }
