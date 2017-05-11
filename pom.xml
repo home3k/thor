@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.haoyayi.thor</groupId>
+    <groupId>me.home3k.thor</groupId>
     <artifactId>thor-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -77,55 +77,55 @@
 
             <!-- Self Module -->
             <dependency>
-                <groupId>com.haoyayi.thor</groupId>
+                <groupId>me.home3k.thor</groupId>
                 <artifactId>thor-api</artifactId>
                 <version>${thor.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.haoyayi.thor</groupId>
+                <groupId>me.home3k.thor</groupId>
                 <artifactId>thor-facade</artifactId>
                 <version>${thor.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.haoyayi.thor</groupId>
+                <groupId>me.home3k.thor</groupId>
                 <artifactId>thor-conf</artifactId>
                 <version>${thor.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.haoyayi.thor</groupId>
+                <groupId>me.home3k.thor</groupId>
                 <artifactId>thor-common</artifactId>
                 <version>${thor.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.haoyayi.thor</groupId>
+                <groupId>me.home3k.thor</groupId>
                 <artifactId>thor-generate</artifactId>
                 <version>${thor.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.haoyayi.thor</groupId>
+                <groupId>me.home3k.thor</groupId>
                 <artifactId>thor-runner</artifactId>
                 <version>${thor.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.haoyayi.thor</groupId>
+                <groupId>me.home3k.thor</groupId>
                 <artifactId>thor-server</artifactId>
                 <version>${thor.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.haoyayi.thor</groupId>
+                <groupId>me.home3k.thor</groupId>
                 <artifactId>thor-core</artifactId>
                 <version>${thor.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.haoyayi.thor</groupId>
+                <groupId>me.home3k.thor</groupId>
                 <artifactId>thor-context</artifactId>
                 <version>${thor.version}</version>
             </dependency>

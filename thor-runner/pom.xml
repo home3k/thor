@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>thor-parent</artifactId>
-        <groupId>com.haoyayi.thor</groupId>
+        <groupId>me.home3k.thor</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -13,23 +13,23 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.haoyayi.thor</groupId>
+            <groupId>me.home3k.thor</groupId>
             <artifactId>thor-conf</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.haoyayi.thor</groupId>
+            <groupId>me.home3k.thor</groupId>
             <artifactId>thor-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.haoyayi.thor</groupId>
+            <groupId>me.home3k.thor</groupId>
             <artifactId>thor-generate</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.haoyayi.thor</groupId>
+            <groupId>me.home3k.thor</groupId>
             <artifactId>thor-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.haoyayi.thor</groupId>
+            <groupId>me.home3k.thor</groupId>
             <artifactId>thor-server</artifactId>
         </dependency>
     </dependencies>
@@ -52,7 +52,7 @@
                             <artifactItems>
                                 <!--  conf -->
                                 <artifactItem>
-                                    <groupId>com.haoyayi.thor</groupId>
+                                    <groupId>me.home3k.thor</groupId>
                                     <artifactId>thor-conf</artifactId>
                                     <outputDirectory>target/extra-conf</outputDirectory>
                                 </artifactItem>

@@ -9,7 +9,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>thor-parent</artifactId>
-        <groupId>com.haoyayi.thor</groupId>
+        <groupId>me.home3k.thor</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -68,12 +68,12 @@
         </dependency>
 
         <dependency>
-            <groupId>com.haoyayi.thor</groupId>
+            <groupId>me.home3k.thor</groupId>
             <artifactId>thor-conf</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.haoyayi.thor</groupId>
+            <groupId>me.home3k.thor</groupId>
             <artifactId>thor-context</artifactId>
         </dependency>
 
